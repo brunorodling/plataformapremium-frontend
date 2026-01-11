@@ -2798,7 +2798,6 @@
         // ==================== INIT ====================
         async function init() {
             try {
-                await initDB();
                 await loadAllData();
                 
                 // Carregar URL do backend das configurações
@@ -2818,9 +2817,25 @@
                         </div>
                     `;
                     
-                    // Esconder overlay e abrir checkout
-                    document.getElementById('loadingOverlay').classList.add('hidden');
-                    openCheckout(parseInt(checkoutId));
+                    // Aguardar um pouco para garantir que os produtos carregaram
+                    setTimeout(() => {
+                        document.getElementById('loadingOverlay').classList.add('hidden');
+                        
+                        const productId = parseInt(checkoutId);
+                        const product = products.find(p => p.id === productId);
+                        
+                        if (product) {
+                            // Produto encontrado - abrir checkout diretamente
+                            hideAllPages();
+                            openCheckoutPreview(productId);
+                        } else {
+                            // Produto não encontrado
+                            console.error('Produto não encontrado:', productId);
+                            console.log('Produtos disponíveis:', products);
+                            showToast('Produto não encontrado!', 'error');
+                            showMemberLogin();
+                        }
+                    }, 1500);
                     
                 } else if (localStorage.getItem('adminLoggedIn') === 'true') {
                     document.getElementById('loadingOverlay').classList.add('hidden');
