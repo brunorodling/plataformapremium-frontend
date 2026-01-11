@@ -1841,7 +1841,15 @@
         // ==================== ORDER BUMPS ====================
         function addOrderBump() {
             const bumpId = Date.now();
-            orderBumps.push({ id: bumpId, name: '', price: 0, description: '' });
+            orderBumps.push({ 
+                id: bumpId, 
+                name: '', 
+                price: 0, 
+                description: '',
+                productType: 'ebook',
+                files: [],
+                externalLinks: ''
+            });
             renderOrderBumps();
         }
 
@@ -1865,13 +1873,116 @@
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <input type="text" placeholder="Nome do bump" value="${bump.name}" onchange="updateOrderBump(${bump.id}, 'name', this.value)" class="col-span-2 px-3 py-2 rounded-lg input-dark text-sm">
+                    <div class="grid grid-cols-2 gap-3 mb-3">
+                        <input type="text" placeholder="Nome do bump" value="${bump.name || ''}" onchange="updateOrderBump(${bump.id}, 'name', this.value)" class="col-span-2 px-3 py-2 rounded-lg input-dark text-sm">
                         <input type="number" placeholder="Preço" value="${bump.price || ''}" onchange="updateOrderBump(${bump.id}, 'price', parseFloat(this.value))" class="px-3 py-2 rounded-lg input-dark text-sm">
-                        <input type="text" placeholder="Descrição curta" value="${bump.description}" onchange="updateOrderBump(${bump.id}, 'description', this.value)" class="px-3 py-2 rounded-lg input-dark text-sm">
+                        <input type="text" placeholder="Descrição curta" value="${bump.description || ''}" onchange="updateOrderBump(${bump.id}, 'description', this.value)" class="px-3 py-2 rounded-lg input-dark text-sm">
+                    </div>
+                    
+                    <!-- Produto/Arquivo do Order Bump -->
+                    <div class="border-t border-amber-500/20 pt-3 mt-3">
+                        <p class="text-amber-300 text-xs font-medium mb-2"><i class="fas fa-box mr-1"></i>Produto do Order Bump</p>
+                        
+                        <!-- Tipo de Produto -->
+                        <select onchange="updateOrderBump(${bump.id}, 'productType', this.value)" class="w-full px-3 py-2 rounded-lg input-dark text-sm mb-2">
+                            <option value="curso" ${bump.productType === 'curso' ? 'selected' : ''}>📚 Curso em Vídeo</option>
+                            <option value="ebook" ${bump.productType === 'ebook' ? 'selected' : ''}>📖 E-book/PDF</option>
+                            <option value="app" ${bump.productType === 'app' ? 'selected' : ''}>📱 Aplicativo (APK)</option>
+                            <option value="software" ${bump.productType === 'software' ? 'selected' : ''}>💻 Software</option>
+                            <option value="template" ${bump.productType === 'template' ? 'selected' : ''}>🎨 Template</option>
+                        </select>
+                        
+                        <!-- Upload de Arquivo -->
+                        <div class="border border-dashed border-amber-500/30 rounded-lg p-3 text-center hover:border-amber-500/50 transition cursor-pointer mb-2" onclick="document.getElementById('bumpFileUpload${bump.id}').click()">
+                            <input type="file" id="bumpFileUpload${bump.id}" class="hidden" onchange="handleBumpFileUpload(${bump.id}, this.files)" accept=".pdf,.apk,.zip,.rar,.mp4,.mp3,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.png,.jpg,.jpeg,.gif">
+                            <div class="flex items-center justify-center space-x-2 text-amber-400">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <span class="text-xs">Clique para fazer upload</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Lista de Arquivos do Bump -->
+                        <div id="bumpFiles${bump.id}" class="space-y-1 mb-2">
+                            ${(bump.files && bump.files.length > 0) ? bump.files.map(file => `
+                                <div class="flex items-center justify-between p-2 bg-black/20 rounded-lg">
+                                    <div class="flex items-center space-x-2">
+                                        <i class="${getFileIcon(file.name)} text-amber-400 text-sm"></i>
+                                        <span class="text-white text-xs truncate max-w-[150px]">${file.name}</span>
+                                    </div>
+                                    <button type="button" onclick="removeBumpFile(${bump.id}, ${file.id})" class="text-red-400 hover:text-red-300 text-xs">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            `).join('') : ''}
+                        </div>
+                        
+                        <!-- Links Externos -->
+                        <textarea placeholder="Links externos (Google Drive, Dropbox, etc.)" 
+                            onchange="updateOrderBump(${bump.id}, 'externalLinks', this.value)" 
+                            class="w-full px-3 py-2 rounded-lg input-dark text-xs" 
+                            rows="2">${bump.externalLinks || ''}</textarea>
                     </div>
                 </div>
             `).join('');
+        }
+        
+        // Função para fazer upload de arquivo para order bump
+        function handleBumpFileUpload(bumpId, files) {
+            const bump = orderBumps.find(b => b.id === bumpId);
+            if (!bump) return;
+            
+            if (!bump.files) bump.files = [];
+            
+            Array.from(files).forEach((file) => {
+                if (file.size > 100 * 1024 * 1024) {
+                    showToast(`Arquivo "${file.name}" excede 100MB. Use links externos.`, 'error');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const fileData = {
+                        id: Date.now(),
+                        name: file.name,
+                        size: file.size,
+                        type: file.type,
+                        data: e.target.result
+                    };
+                    
+                    // Verificar tamanho para Firestore
+                    if (fileData.data.length > 500000) {
+                        // Arquivo grande - salvar localmente
+                        try {
+                            localStorage.setItem(`bumpfile_${fileData.id}`, fileData.data);
+                            fileData.isLargeFile = true;
+                            fileData.localStorageKey = `bumpfile_${fileData.id}`;
+                            delete fileData.data;
+                        } catch (err) {
+                            showToast('Arquivo muito grande. Use links externos.', 'error');
+                            return;
+                        }
+                    }
+                    
+                    bump.files.push(fileData);
+                    renderOrderBumps();
+                    showToast('Arquivo adicionado ao order bump!', 'success');
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+        
+        // Remover arquivo do order bump
+        function removeBumpFile(bumpId, fileId) {
+            const bump = orderBumps.find(b => b.id === bumpId);
+            if (!bump || !bump.files) return;
+            
+            const file = bump.files.find(f => f.id === fileId);
+            if (file && file.localStorageKey) {
+                localStorage.removeItem(file.localStorageKey);
+            }
+            
+            bump.files = bump.files.filter(f => f.id !== fileId);
+            renderOrderBumps();
         }
 
         function updateOrderBump(id, field, value) {
@@ -2133,7 +2244,18 @@
                         id: b.id,
                         name: b.name,
                         price: Number(b.price),
-                        description: b.description || ''
+                        description: b.description || '',
+                        productType: b.productType || 'ebook',
+                        files: (b.files || []).map(f => ({
+                            id: f.id,
+                            name: f.name,
+                            size: f.size,
+                            type: f.type,
+                            isLargeFile: f.isLargeFile || false,
+                            localStorageKey: f.localStorageKey || null,
+                            data: f.isLargeFile ? null : f.data
+                        })),
+                        externalLinks: b.externalLinks || ''
                     }))
                 };
                 
@@ -2483,12 +2605,29 @@
             await saveToStore('sales', sale);
             sales.push(sale);
             
+            // Coletar IDs dos order bumps comprados para dar acesso
+            const bumpProductIds = currentCheckoutData.orderBumps.map(bump => `bump_${bump.id}`);
+            
             // Create/update member
             const existingMember = members.find(m => m.email === currentCheckoutData.customerEmail);
             if (existingMember) {
+                // Adicionar produto principal
                 if (!existingMember.products.includes(currentCheckoutData.productId)) {
                     existingMember.products.push(currentCheckoutData.productId);
                 }
+                // Adicionar order bumps como produtos extras
+                bumpProductIds.forEach(bumpId => {
+                    if (!existingMember.products.includes(bumpId)) {
+                        existingMember.products.push(bumpId);
+                    }
+                });
+                // Salvar order bumps completos para acesso na área de membros
+                if (!existingMember.purchasedBumps) existingMember.purchasedBumps = [];
+                currentCheckoutData.orderBumps.forEach(bump => {
+                    if (!existingMember.purchasedBumps.find(b => b.id === bump.id)) {
+                        existingMember.purchasedBumps.push(bump);
+                    }
+                });
                 await saveToStore('members', existingMember);
             } else {
                 const newMember = {
@@ -2496,7 +2635,8 @@
                     name: currentCheckoutData.customerName,
                     email: currentCheckoutData.customerEmail,
                     password: currentCheckoutData.customerPassword,
-                    products: [currentCheckoutData.productId],
+                    products: [currentCheckoutData.productId, ...bumpProductIds],
+                    purchasedBumps: currentCheckoutData.orderBumps,
                     createdAt: new Date().toISOString()
                 };
                 await saveToStore('members', newMember);
@@ -2560,17 +2700,35 @@
             // Set member initial
             document.getElementById('memberInitial').textContent = member.name.charAt(0).toUpperCase();
             
+            // Produtos principais
             const memberProducts = products.filter(p => member.products.includes(p.id));
+            
+            // Converter order bumps comprados em "produtos" para exibição
+            const bumpProducts = (member.purchasedBumps || []).map(bump => ({
+                id: `bump_${bump.id}`,
+                name: bump.name,
+                description: bump.description || 'Produto adicional',
+                type: bump.productType || 'ebook',
+                price: bump.price,
+                files: bump.files || [],
+                content: bump.externalLinks || '',
+                image: null,
+                isBump: true
+            }));
+            
+            // Combinar produtos e bumps
+            const allMemberProducts = [...memberProducts, ...bumpProducts];
+            
             const container = document.getElementById('memberProductsList');
             
-            if (memberProducts.length === 0) {
+            if (allMemberProducts.length === 0) {
                 container.innerHTML = '<p class="text-gray-400 text-center py-8">Você ainda não possui produtos. Adquira seu primeiro produto!</p>';
                 return;
             }
             
             // Update hero with first product
-            if (memberProducts.length > 0) {
-                const heroProduct = memberProducts[0];
+            if (allMemberProducts.length > 0) {
+                const heroProduct = allMemberProducts[0];
                 document.getElementById('heroTitle').textContent = heroProduct.name;
                 document.getElementById('heroDescription').textContent = heroProduct.description;
                 if (heroProduct.image) {
@@ -2579,12 +2737,12 @@
             }
             
             // Render all products
-            container.innerHTML = memberProducts.map(product => createNetflixCard(product)).join('');
+            container.innerHTML = allMemberProducts.map(product => createNetflixCard(product)).join('');
             
             // Separate by type
-            const courses = memberProducts.filter(p => p.type === 'curso');
-            const ebooks = memberProducts.filter(p => p.type === 'ebook');
-            const apps = memberProducts.filter(p => p.type === 'app' || p.type === 'software');
+            const courses = allMemberProducts.filter(p => p.type === 'curso');
+            const ebooks = allMemberProducts.filter(p => p.type === 'ebook');
+            const apps = allMemberProducts.filter(p => p.type === 'app' || p.type === 'software');
             
             // Render courses
             if (courses.length > 0) {
@@ -2612,23 +2770,26 @@
             const typeClass = `type-${product.type}`;
             const fileCount = (product.files ? product.files.length : 0) + (product.content ? product.content.split('\n').filter(l => l.trim()).length : 0);
             const placeholder = `https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=400&q=80`;
+            const isBump = product.isBump || false;
+            const productIdStr = typeof product.id === 'string' ? `'${product.id}'` : product.id;
             
             return `
-                <div class="netflix-card" onclick="openProductDetail(${product.id})">
+                <div class="netflix-card" onclick="openProductDetail(${productIdStr})">
                     <div class="netflix-card-image" style="background-image: url('${product.image || placeholder}');">
                         <div class="netflix-card-overlay"></div>
                         <div class="netflix-card-content">
                             <div class="netflix-card-buttons">
-                                <button class="netflix-card-btn netflix-card-btn-primary" onclick="event.stopPropagation(); playProduct(${product.id})">
+                                <button class="netflix-card-btn netflix-card-btn-primary" onclick="event.stopPropagation(); playProduct(${productIdStr})">
                                     <i class="fas fa-play"></i>
                                 </button>
-                                <button class="netflix-card-btn netflix-card-btn-secondary" onclick="event.stopPropagation(); openProductDetail(${product.id})">
+                                <button class="netflix-card-btn netflix-card-btn-secondary" onclick="event.stopPropagation(); openProductDetail(${productIdStr})">
                                     <i class="fas fa-chevron-down"></i>
                                 </button>
                             </div>
                         </div>
-                        <div class="absolute top-2 left-2">
+                        <div class="absolute top-2 left-2 flex space-x-1">
                             <span class="${typeClass} text-white text-xs font-bold px-2 py-0.5 rounded">${getTypeEmoji(product.type)}</span>
+                            ${isBump ? '<span class="bg-amber-500 text-white text-xs font-bold px-2 py-0.5 rounded"><i class="fas fa-bolt"></i> Bônus</span>' : ''}
                         </div>
                     </div>
                     <div class="mt-2">
@@ -2648,7 +2809,32 @@
         }
         
         function openProductDetail(productId) {
-            const product = products.find(p => p.id === productId);
+            let product = null;
+            
+            // Verificar se é um order bump (ID começa com 'bump_')
+            if (typeof productId === 'string' && productId.startsWith('bump_')) {
+                const memberEmail = localStorage.getItem('currentMember');
+                const member = members.find(m => m.email === memberEmail);
+                if (member && member.purchasedBumps) {
+                    const bumpId = parseInt(productId.replace('bump_', ''));
+                    const bump = member.purchasedBumps.find(b => b.id === bumpId);
+                    if (bump) {
+                        product = {
+                            id: productId,
+                            name: bump.name,
+                            description: bump.description || 'Produto bônus',
+                            type: bump.productType || 'ebook',
+                            files: bump.files || [],
+                            content: bump.externalLinks || '',
+                            image: null,
+                            isBump: true
+                        };
+                    }
+                }
+            } else {
+                product = products.find(p => p.id === productId);
+            }
+            
             if (!product) return;
             
             currentDetailProduct = product;
@@ -2718,16 +2904,48 @@
         }
         
         function playProduct(productId = null) {
-            const product = productId ? products.find(p => p.id === productId) : currentDetailProduct;
+            let product = null;
+            
+            if (productId) {
+                // Verificar se é um order bump
+                if (typeof productId === 'string' && productId.startsWith('bump_')) {
+                    const memberEmail = localStorage.getItem('currentMember');
+                    const member = members.find(m => m.email === memberEmail);
+                    if (member && member.purchasedBumps) {
+                        const bumpId = parseInt(productId.replace('bump_', ''));
+                        const bump = member.purchasedBumps.find(b => b.id === bumpId);
+                        if (bump) {
+                            product = {
+                                files: bump.files || [],
+                                content: bump.externalLinks || ''
+                            };
+                        }
+                    }
+                } else {
+                    product = products.find(p => p.id === productId);
+                }
+            } else {
+                product = currentDetailProduct;
+            }
+            
             if (!product) return;
             
             // Try to find a playable file or link
             if (product.files && product.files.length > 0) {
                 const file = product.files[0];
-                const link = document.createElement('a');
-                link.href = file.data;
-                link.download = file.name;
-                link.click();
+                // Verificar se precisa buscar do localStorage
+                let fileData = file.data;
+                if (file.isLargeFile && file.localStorageKey) {
+                    fileData = localStorage.getItem(file.localStorageKey);
+                }
+                if (fileData) {
+                    const link = document.createElement('a');
+                    link.href = fileData;
+                    link.download = file.name;
+                    link.click();
+                } else {
+                    showToast('Arquivo não disponível localmente', 'error');
+                }
             } else if (product.content) {
                 const firstLink = product.content.split('\n').find(l => l.trim());
                 if (firstLink) {
