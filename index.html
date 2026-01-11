@@ -1,0 +1,2955 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bruno Rodling - Plataforma Premium</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a25;
+            --bg-card: #16161f;
+            --border-color: #2a2a3a;
+            --accent-primary: #8b5cf6;
+            --accent-secondary: #a78bfa;
+            --accent-gradient: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+        
+        body {
+            background: var(--bg-primary);
+            color: #e5e5e5;
+        }
+        
+        .glass-card {
+            background: rgba(22, 22, 31, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .gradient-border {
+            position: relative;
+            background: var(--bg-card);
+            border-radius: 1rem;
+        }
+        
+        .gradient-border::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 1rem;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.5), rgba(236, 72, 153, 0.5));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        
+        .glow-effect {
+            box-shadow: 0 0 40px rgba(139, 92, 246, 0.15);
+        }
+        
+        .glow-text {
+            text-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+        }
+        
+        .premium-gradient {
+            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 50%, #8b5cf6 100%);
+            background-size: 200% auto;
+            animation: shimmer 3s linear infinite;
+        }
+        
+        @keyframes shimmer {
+            to { background-position: 200% center; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.4s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .slide-up {
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .pulse-glow {
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(139, 92, 246, 0.6); }
+        }
+        
+        .input-dark {
+            background: rgba(26, 26, 37, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+        
+        .input-dark:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+            outline: none;
+        }
+        
+        .input-dark::placeholder {
+            color: #6b7280;
+        }
+        
+        .btn-premium {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-premium:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+        }
+        
+        .btn-premium:active {
+            transform: translateY(0);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(139, 92, 246, 0.1) 100%);
+        }
+        
+        .scrollbar-custom::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .scrollbar-custom::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+        
+        .scrollbar-custom::-webkit-scrollbar-thumb {
+            background: #8b5cf6;
+            border-radius: 3px;
+        }
+        
+        .order-bump-card {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%);
+            border: 2px dashed rgba(245, 158, 11, 0.5);
+        }
+        
+        .order-bump-card.selected {
+            border: 2px solid #f59e0b;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(236, 72, 153, 0.2) 100%);
+        }
+        
+        .checkout-container {
+            background: linear-gradient(180deg, #0a0a0f 0%, #12121a 50%, #1a1025 100%);
+        }
+        
+        .secure-badge {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(16, 185, 129, 0.1) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        .nav-item {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #8b5cf6, #ec4899);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .nav-item:hover::after, .nav-item.active::after {
+            width: 100%;
+        }
+        
+        .loading-spinner {
+            border: 3px solid rgba(139, 92, 246, 0.1);
+            border-top-color: #8b5cf6;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .payment-method {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .payment-method:hover {
+            transform: translateY(-2px);
+        }
+        
+        .payment-method.selected {
+            border-color: #8b5cf6 !important;
+            background: rgba(139, 92, 246, 0.1);
+        }
+        
+        .pix-code {
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 10px;
+            line-height: 1.4;
+        }
+        
+        .copy-btn {
+            transition: all 0.3s ease;
+        }
+        
+        .copy-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .copy-btn.copied {
+            background: #10b981 !important;
+        }
+        
+        @keyframes countdown {
+            from { stroke-dashoffset: 0; }
+            to { stroke-dashoffset: 283; }
+        }
+        
+        .countdown-ring {
+            animation: countdown 1800s linear forwards;
+        }
+        
+        /* Netflix-style scrollbar hide */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        /* Netflix Card Styles */
+        .netflix-card {
+            flex-shrink: 0;
+            width: 160px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        @media (min-width: 640px) {
+            .netflix-card {
+                width: 200px;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .netflix-card {
+                width: 240px;
+            }
+        }
+        
+        .netflix-card:hover {
+            transform: scale(1.05);
+            z-index: 10;
+        }
+        
+        .netflix-card-image {
+            aspect-ratio: 16/9;
+            background-size: cover;
+            background-position: center;
+            border-radius: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .netflix-card-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.9) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .netflix-card:hover .netflix-card-overlay {
+            opacity: 1;
+        }
+        
+        .netflix-card-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .netflix-card:hover .netflix-card-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .netflix-card-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .netflix-card-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+        
+        .netflix-card-btn-primary {
+            background: white;
+            color: black;
+        }
+        
+        .netflix-card-btn-primary:hover {
+            background: #e5e5e5;
+        }
+        
+        .netflix-card-btn-secondary {
+            background: rgba(42, 42, 42, 0.8);
+            border: 1px solid rgba(255,255,255,0.5);
+            color: white;
+        }
+        
+        .netflix-card-btn-secondary:hover {
+            border-color: white;
+        }
+        
+        .netflix-progress-bar {
+            height: 3px;
+            background: #333;
+            border-radius: 0 0 0.5rem 0.5rem;
+            overflow: hidden;
+        }
+        
+        .netflix-progress {
+            height: 100%;
+            background: #e50914;
+        }
+        
+        /* Expanded Card on Hover */
+        .netflix-card-expanded {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #181818;
+            border-radius: 0 0 0.5rem 0.5rem;
+            padding: 1rem;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+        
+        .netflix-card:hover .netflix-card-expanded {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        /* Type Badge Colors */
+        .type-curso { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+        .type-ebook { background: linear-gradient(135deg, #10b981, #059669); }
+        .type-app { background: linear-gradient(135deg, #ec4899, #be185d); }
+        .type-software { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+        .type-template { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        
+        /* Header scroll effect */
+        .member-nav-scrolled {
+            background: rgba(10, 10, 15, 0.95) !important;
+            backdrop-filter: blur(20px);
+        }
+        
+        .member-nav-scrolled > div {
+            background: transparent !important;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="fixed inset-0 bg-[#0a0a0f] flex items-center justify-center z-[100]">
+        <div class="text-center">
+            <div class="w-16 h-16 loading-spinner rounded-full mx-auto mb-4"></div>
+            <p class="text-gray-400 font-medium">Carregando plataforma...</p>
+        </div>
+    </div>
+
+    <!-- Admin Login Page -->
+    <div id="loginPage" class="hidden min-h-screen flex items-center justify-center p-4">
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-600/20 rounded-full blur-3xl"></div>
+        </div>
+        
+        <div class="glass-card rounded-3xl p-8 w-full max-w-md relative z-10 slide-up glow-effect">
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 premium-gradient rounded-2xl flex items-center justify-center mx-auto mb-6 rotate-3">
+                    <i class="fas fa-bolt text-white text-3xl"></i>
+                </div>
+                <h1 class="text-3xl font-bold text-white glow-text">Área do Vendedor</h1>
+                <p class="text-gray-400 mt-2">Acesse seu painel exclusivo</p>
+            </div>
+            <form id="loginForm" class="space-y-5">
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">
+                        <i class="fas fa-user mr-2 text-purple-400"></i>Usuário
+                    </label>
+                    <input type="text" id="username" class="w-full px-4 py-3.5 rounded-xl input-dark" placeholder="Digite seu usuário">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">
+                        <i class="fas fa-lock mr-2 text-purple-400"></i>Senha
+                    </label>
+                    <input type="password" id="password" class="w-full px-4 py-3.5 rounded-xl input-dark" placeholder="Digite sua senha">
+                </div>
+                <div id="loginError" class="hidden text-red-400 text-sm text-center bg-red-500/10 py-2 rounded-lg"></div>
+                <button type="submit" class="w-full btn-premium text-white py-4 rounded-xl font-semibold text-lg">
+                    <i class="fas fa-arrow-right mr-2"></i>Acessar Dashboard
+                </button>
+            </form>
+            <div class="mt-8 text-center">
+                <a href="#" onclick="showMemberLogin()" class="text-purple-400 hover:text-purple-300 transition text-sm">
+                    <i class="fas fa-crown mr-2"></i>Área de Membros
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Member Login Page -->
+    <div id="memberLoginPage" class="hidden min-h-screen flex items-center justify-center p-4">
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="absolute top-1/3 right-1/4 w-80 h-80 bg-purple-600/20 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-1/3 left-1/4 w-80 h-80 bg-pink-600/20 rounded-full blur-3xl"></div>
+        </div>
+        
+        <div class="glass-card rounded-3xl p-8 w-full max-w-md relative z-10 slide-up glow-effect">
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-6 -rotate-3">
+                    <i class="fas fa-crown text-white text-3xl"></i>
+                </div>
+                <h1 class="text-3xl font-bold text-white">Área de Membros</h1>
+                <p class="text-gray-400 mt-2">Acesse seus produtos exclusivos</p>
+            </div>
+            <form id="memberLoginForm" class="space-y-5">
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">
+                        <i class="fas fa-envelope mr-2 text-amber-400"></i>E-mail
+                    </label>
+                    <input type="email" id="memberEmail" class="w-full px-4 py-3.5 rounded-xl input-dark" placeholder="Digite seu e-mail">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">
+                        <i class="fas fa-key mr-2 text-amber-400"></i>Senha
+                    </label>
+                    <input type="password" id="memberPassword" class="w-full px-4 py-3.5 rounded-xl input-dark" placeholder="Digite sua senha">
+                </div>
+                <div id="memberLoginError" class="hidden text-red-400 text-sm text-center bg-red-500/10 py-2 rounded-lg"></div>
+                <button type="submit" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 text-white py-4 rounded-xl font-semibold text-lg hover:shadow-lg hover:shadow-amber-500/25 transition-all hover:-translate-y-0.5">
+                    <i class="fas fa-unlock mr-2"></i>Acessar Meus Produtos
+                </button>
+            </form>
+            <div class="mt-8 text-center">
+                <a href="#" onclick="showAdminLogin()" class="text-gray-500 hover:text-gray-400 transition text-sm">
+                    <i class="fas fa-cog mr-2"></i>Área do Vendedor
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Page -->
+    <div id="dashboardPage" class="hidden">
+        <!-- Navbar -->
+        <nav class="glass-card border-b border-white/5 sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-3 sm:space-x-4">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 premium-gradient rounded-xl flex items-center justify-center">
+                            <i class="fas fa-bolt text-white text-lg sm:text-xl"></i>
+                        </div>
+                        <div>
+                            <span class="text-lg sm:text-xl font-bold text-white">Bruno Rodling</span>
+                            <span class="text-xs text-purple-400 block hidden sm:block">Plataforma Premium</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Mobile Menu Button -->
+                    <button onclick="toggleMobileMenu()" class="lg:hidden w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-gray-300">
+                        <i class="fas fa-bars text-lg" id="menuIcon"></i>
+                    </button>
+                    
+                    <!-- Desktop Menu -->
+                    <div class="hidden lg:flex items-center space-x-2">
+                        <button onclick="showSection('dashboard')" class="nav-item px-5 py-2.5 rounded-xl text-gray-300 hover:text-white hover:bg-white/5 transition">
+                            <i class="fas fa-chart-line mr-2"></i>Dashboard
+                        </button>
+                        <button onclick="showSection('products')" class="nav-item px-5 py-2.5 rounded-xl text-gray-300 hover:text-white hover:bg-white/5 transition">
+                            <i class="fas fa-box mr-2"></i>Produtos
+                        </button>
+                        <button onclick="showSection('members')" class="nav-item px-5 py-2.5 rounded-xl text-gray-300 hover:text-white hover:bg-white/5 transition">
+                            <i class="fas fa-users mr-2"></i>Membros
+                        </button>
+                        <button onclick="showSection('settings')" class="nav-item px-5 py-2.5 rounded-xl text-gray-300 hover:text-white hover:bg-white/5 transition">
+                            <i class="fas fa-cog mr-2"></i>Config
+                        </button>
+                        <button onclick="logout()" class="ml-4 bg-red-500/20 text-red-400 px-5 py-2.5 rounded-xl hover:bg-red-500/30 transition">
+                            <i class="fas fa-sign-out-alt mr-2"></i>Sair
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Mobile Menu -->
+                <div id="mobileMenu" class="hidden lg:hidden mt-4 pt-4 border-t border-white/10">
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="showSection('dashboard'); toggleMobileMenu()" class="flex items-center justify-center space-x-2 px-4 py-3 rounded-xl text-gray-300 bg-white/5 hover:bg-white/10 transition">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Dashboard</span>
+                        </button>
+                        <button onclick="showSection('products'); toggleMobileMenu()" class="flex items-center justify-center space-x-2 px-4 py-3 rounded-xl text-gray-300 bg-white/5 hover:bg-white/10 transition">
+                            <i class="fas fa-box"></i>
+                            <span>Produtos</span>
+                        </button>
+                        <button onclick="showSection('members'); toggleMobileMenu()" class="flex items-center justify-center space-x-2 px-4 py-3 rounded-xl text-gray-300 bg-white/5 hover:bg-white/10 transition">
+                            <i class="fas fa-users"></i>
+                            <span>Membros</span>
+                        </button>
+                        <button onclick="showSection('settings'); toggleMobileMenu()" class="flex items-center justify-center space-x-2 px-4 py-3 rounded-xl text-gray-300 bg-white/5 hover:bg-white/10 transition">
+                            <i class="fas fa-cog"></i>
+                            <span>Config</span>
+                        </button>
+                    </div>
+                    <button onclick="logout()" class="w-full mt-2 bg-red-500/20 text-red-400 px-4 py-3 rounded-xl hover:bg-red-500/30 transition flex items-center justify-center space-x-2">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Sair</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Dashboard Content -->
+        <div id="dashboardContent" class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 fade-in">
+            <div class="flex flex-col sm:flex-row justify-between items-start gap-4 mb-6 sm:mb-8">
+                <div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white">Dashboard</h2>
+                    <p class="text-gray-400 mt-1 text-sm sm:text-base">Visão geral do seu negócio</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <div class="flex items-center space-x-2 px-3 sm:px-4 py-2 rounded-xl bg-green-500/10 border border-green-500/30">
+                        <i class="fas fa-circle text-green-400 text-xs animate-pulse"></i>
+                        <span class="text-xs sm:text-sm text-green-400">Sistema Ativo</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
+                <div class="stat-card gradient-border rounded-2xl p-4 sm:p-6 card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-400 text-xs sm:text-sm font-medium">Faturamento</p>
+                            <p class="text-xl sm:text-3xl font-bold text-white mt-1 sm:mt-2" id="totalEarnings">R$ 0,00</p>
+                            <p class="text-green-400 text-xs mt-1 sm:mt-2 hidden sm:block"><i class="fas fa-arrow-up mr-1"></i>+12% este mês</p>
+                        </div>
+                        <div class="w-10 h-10 sm:w-14 sm:h-14 bg-green-500/20 rounded-xl sm:rounded-2xl flex items-center justify-center">
+                            <i class="fas fa-dollar-sign text-green-400 text-lg sm:text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card gradient-border rounded-2xl p-4 sm:p-6 card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-400 text-xs sm:text-sm font-medium">Vendas</p>
+                            <p class="text-xl sm:text-3xl font-bold text-white mt-1 sm:mt-2" id="totalSales">0</p>
+                            <p class="text-blue-400 text-xs mt-1 sm:mt-2 hidden sm:block"><i class="fas fa-shopping-bag mr-1"></i>Total de vendas</p>
+                        </div>
+                        <div class="w-10 h-10 sm:w-14 sm:h-14 bg-blue-500/20 rounded-xl sm:rounded-2xl flex items-center justify-center">
+                            <i class="fas fa-shopping-cart text-blue-400 text-lg sm:text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card gradient-border rounded-2xl p-4 sm:p-6 card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-400 text-xs sm:text-sm font-medium">Produtos</p>
+                            <p class="text-xl sm:text-3xl font-bold text-white mt-1 sm:mt-2" id="totalProducts">0</p>
+                            <p class="text-purple-400 text-xs mt-1 sm:mt-2 hidden sm:block"><i class="fas fa-box mr-1"></i>Ativos</p>
+                        </div>
+                        <div class="w-10 h-10 sm:w-14 sm:h-14 bg-purple-500/20 rounded-xl sm:rounded-2xl flex items-center justify-center">
+                            <i class="fas fa-box text-purple-400 text-lg sm:text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card gradient-border rounded-2xl p-4 sm:p-6 card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-400 text-xs sm:text-sm font-medium">Membros</p>
+                            <p class="text-xl sm:text-3xl font-bold text-white mt-1 sm:mt-2" id="totalMembers">0</p>
+                            <p class="text-amber-400 text-xs mt-1 sm:mt-2 hidden sm:block"><i class="fas fa-crown mr-1"></i>Com acesso</p>
+                        </div>
+                        <div class="w-10 h-10 sm:w-14 sm:h-14 bg-amber-500/20 rounded-xl sm:rounded-2xl flex items-center justify-center">
+                            <i class="fas fa-users text-amber-400 text-lg sm:text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Sales -->
+            <div class="glass-card rounded-2xl p-6 border border-white/5">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-bold text-white"><i class="fas fa-chart-bar mr-3 text-purple-400"></i>Vendas Recentes</h3>
+                    <span class="text-sm text-gray-400">Últimas 10 vendas</span>
+                </div>
+                <div id="recentSalesList" class="space-y-3 scrollbar-custom max-h-96 overflow-y-auto">
+                    <p class="text-gray-500 text-center py-8">Nenhuma venda registrada ainda</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Content -->
+        <div id="productsContent" class="hidden max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 fade-in">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
+                <div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white">Produtos</h2>
+                    <p class="text-gray-400 mt-1 text-sm sm:text-base">Gerencie seus produtos digitais</p>
+                </div>
+                <button onclick="openProductModal()" class="btn-premium text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold flex items-center space-x-2 w-full sm:w-auto justify-center">
+                    <i class="fas fa-plus"></i>
+                    <span>Novo Produto</span>
+                </button>
+            </div>
+            
+            <div id="productsList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                <!-- Products will be rendered here -->
+            </div>
+        </div>
+
+        <!-- Members Content -->
+        <div id="membersContent" class="hidden max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 fade-in">
+            <div class="mb-6 sm:mb-8">
+                <h2 class="text-2xl sm:text-3xl font-bold text-white">Membros</h2>
+                <p class="text-gray-400 mt-1 text-sm sm:text-base">Clientes com acesso aos produtos</p>
+            </div>
+            
+            <div class="glass-card rounded-2xl p-6 border border-white/5">
+                <div id="membersList" class="space-y-3">
+                    <p class="text-gray-500 text-center py-8">Nenhum membro registrado ainda</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Content -->
+        <div id="settingsContent" class="hidden max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 fade-in">
+            <div class="mb-6 sm:mb-8">
+                <h2 class="text-2xl sm:text-3xl font-bold text-white">Configurações</h2>
+                <p class="text-gray-400 mt-1 text-sm sm:text-base">Configure sua plataforma de vendas</p>
+            </div>
+            
+            <!-- Backend Integration -->
+            <div class="glass-card rounded-2xl p-6 border border-white/5 mb-6">
+                <div class="flex items-start space-x-4 mb-6">
+                    <div class="w-14 h-14 bg-blue-500/20 rounded-2xl flex items-center justify-center">
+                        <i class="fas fa-server text-blue-400 text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white">Backend de Pagamentos</h3>
+                        <p class="text-gray-400 mt-1">Servidor seguro integrado com Asaas</p>
+                    </div>
+                </div>
+                
+                <div class="space-y-5">
+                    <div id="backendStatus" class="flex items-center justify-between p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-spinner fa-spin text-amber-400 text-xl"></i>
+                            <div>
+                                <p class="text-amber-400 font-semibold">Verificando conexão...</p>
+                                <p class="text-amber-300/70 text-sm">Aguarde</p>
+                            </div>
+                        </div>
+                        <span class="px-3 py-1 bg-amber-500/20 text-amber-400 rounded-full text-xs font-medium">VERIFICANDO</span>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">
+                            <i class="fas fa-link mr-2 text-blue-400"></i>URL do Backend
+                        </label>
+                        <div class="flex space-x-3">
+                            <input type="text" id="backendUrl" class="flex-1 px-4 py-3.5 rounded-xl input-dark" placeholder="http://localhost:3000" value="http://localhost:3000">
+                            <button onclick="testBackendConnection()" class="px-6 py-3.5 btn-premium text-white rounded-xl font-medium">
+                                <i class="fas fa-sync-alt mr-2"></i>Testar
+                            </button>
+                        </div>
+                        <p class="text-gray-500 text-xs mt-2">URL do seu backend (local ou Vercel)</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="p-4 bg-white/5 rounded-xl text-center">
+                            <i class="fas fa-qrcode text-green-400 text-2xl mb-2"></i>
+                            <p class="text-white font-medium text-sm">PIX</p>
+                            <p class="text-green-400 text-xs">Disponível</p>
+                        </div>
+                        <div class="p-4 bg-white/5 rounded-xl text-center">
+                            <i class="fas fa-barcode text-amber-400 text-2xl mb-2"></i>
+                            <p class="text-white font-medium text-sm">Boleto</p>
+                            <p class="text-green-400 text-xs">Disponível</p>
+                        </div>
+                        <div class="p-4 bg-white/5 rounded-xl text-center">
+                            <i class="fas fa-credit-card text-blue-400 text-2xl mb-2"></i>
+                            <p class="text-white font-medium text-sm">Cartão</p>
+                            <p class="text-green-400 text-xs">Disponível</p>
+                        </div>
+                    </div>
+                    
+                    <div class="p-4 bg-green-500/10 border border-green-500/30 rounded-xl">
+                        <div class="flex items-start space-x-3">
+                            <i class="fas fa-shield-alt text-green-400 mt-0.5"></i>
+                            <div class="text-sm text-green-200">
+                                <p class="font-medium mb-1">Segurança Ativa:</p>
+                                <p class="text-green-300/80">Sua API Key do Asaas está protegida no backend. Nenhuma chave sensível é exposta no navegador.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-4 bg-purple-500/10 border border-purple-500/30 rounded-xl">
+                        <div class="flex items-start space-x-3">
+                            <i class="fas fa-terminal text-purple-400 mt-0.5"></i>
+                            <div class="text-sm text-purple-200">
+                                <p class="font-medium mb-2">Como iniciar o backend:</p>
+                                <code class="block bg-black/30 p-3 rounded-lg text-purple-300 text-xs">
+                                    cd backend<br>
+                                    npm install<br>
+                                    npm start
+                                </code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Payment Settings -->
+            <div class="glass-card rounded-2xl p-6 border border-white/5 mb-6">
+                <div class="flex items-start space-x-4 mb-6">
+                    <div class="w-14 h-14 bg-green-500/20 rounded-2xl flex items-center justify-center">
+                        <i class="fas fa-credit-card text-green-400 text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white">Informações de Recebimento</h3>
+                        <p class="text-gray-400 mt-1">Dados exibidos para os clientes</p>
+                    </div>
+                </div>
+                
+                <div class="space-y-5">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">
+                            <i class="fas fa-user mr-2 text-green-400"></i>Nome do Beneficiário
+                        </label>
+                        <input type="text" id="pixName" class="w-full px-4 py-3.5 rounded-xl input-dark" placeholder="Seu nome completo ou razão social">
+                    </div>
+                    
+                    <button onclick="savePaymentSettings()" class="w-full btn-premium text-white py-4 rounded-xl font-semibold text-lg">
+                        <i class="fas fa-save mr-2"></i>Salvar Configurações
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Dados da Loja -->
+            <div class="glass-card rounded-2xl p-6 border border-white/5">
+                <h4 class="text-lg font-bold text-white mb-4"><i class="fas fa-store mr-2 text-purple-400"></i>Dados da Loja</h4>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Nome da Loja</label>
+                        <input type="text" id="storeName" class="w-full px-4 py-3.5 rounded-xl input-dark" placeholder="Bruno Rodling" value="Bruno Rodling">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">E-mail de Contato</label>
+                        <input type="email" id="storeEmail" class="w-full px-4 py-3.5 rounded-xl input-dark" placeholder="contato@exemplo.com">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">WhatsApp</label>
+                        <input type="text" id="storeWhatsapp" class="w-full px-4 py-3.5 rounded-xl input-dark" placeholder="(11) 99999-9999">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div id="productModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div class="glass-card rounded-3xl w-full max-w-3xl max-h-[90vh] overflow-hidden slide-up">
+            <div class="p-6 border-b border-white/10 flex justify-between items-center">
+                <h3 class="text-xl font-bold text-white" id="modalTitle">
+                    <i class="fas fa-box mr-3 text-purple-400"></i>Novo Produto
+                </h3>
+                <button onclick="closeProductModal()" class="w-10 h-10 rounded-xl bg-white/5 hover:bg-white/10 transition flex items-center justify-center text-gray-400 hover:text-white">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="productForm" class="p-6 space-y-5 overflow-y-auto scrollbar-custom max-h-[calc(90vh-100px)]">
+                <input type="hidden" id="productId">
+                
+                <div class="grid grid-cols-2 gap-5">
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Nome do Produto</label>
+                        <input type="text" id="productName" class="w-full px-4 py-3 rounded-xl input-dark" placeholder="Ex: Curso Completo de Marketing" required>
+                    </div>
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Descrição</label>
+                        <textarea id="productDesc" rows="3" class="w-full px-4 py-3 rounded-xl input-dark" placeholder="Descreva seu produto..." required></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Preço (R$)</label>
+                        <input type="number" id="productPrice" step="0.01" class="w-full px-4 py-3 rounded-xl input-dark" placeholder="97.00" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Tipo</label>
+                        <select id="productType" class="w-full px-4 py-3 rounded-xl input-dark">
+                            <option value="curso">📚 Curso em Vídeo</option>
+                            <option value="ebook">📖 E-book/PDF</option>
+                            <option value="app">📱 Aplicativo (APK)</option>
+                            <option value="software">💻 Software</option>
+                            <option value="template">🎨 Template</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Image Upload -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">
+                        <i class="fas fa-image mr-2 text-purple-400"></i>Imagem do Produto
+                    </label>
+                    <div class="border-2 border-dashed border-white/10 rounded-xl p-6 text-center hover:border-purple-500/50 transition cursor-pointer bg-white/5" id="imageDropZone" onclick="document.getElementById('imageUpload').click()">
+                        <input type="file" id="imageUpload" class="hidden" accept="image/*">
+                        <div id="imagePreviewContainer" class="hidden">
+                            <img id="imagePreview" class="max-h-40 mx-auto rounded-xl">
+                            <button type="button" onclick="event.stopPropagation(); removeProductImage()" class="mt-3 text-red-400 hover:text-red-300 text-sm">
+                                <i class="fas fa-trash mr-1"></i>Remover
+                            </button>
+                        </div>
+                        <div id="imagePlaceholder">
+                            <div class="w-16 h-16 bg-purple-500/20 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                                <i class="fas fa-cloud-upload-alt text-purple-400 text-2xl"></i>
+                            </div>
+                            <p class="text-gray-400">Arraste ou clique para enviar</p>
+                            <p class="text-gray-500 text-sm mt-1">PNG, JPG, GIF (max. 5MB)</p>
+                        </div>
+                    </div>
+                    <input type="hidden" id="productImage">
+                </div>
+                
+                <!-- File Upload -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">
+                        <i class="fas fa-file-archive mr-2 text-purple-400"></i>Arquivos do Produto
+                    </label>
+                    <div class="border-2 border-dashed border-white/10 rounded-xl p-6 text-center hover:border-purple-500/50 transition cursor-pointer bg-white/5" id="dropZone" onclick="document.getElementById('fileUpload').click()">
+                        <input type="file" id="fileUpload" multiple class="hidden" accept=".pdf,.apk,.zip,.rar,.mp4,.mp3,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.png,.jpg,.jpeg,.gif">
+                        <div class="w-16 h-16 bg-green-500/20 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-file-upload text-green-400 text-2xl"></i>
+                        </div>
+                        <p class="text-gray-400">Arraste ou clique para enviar arquivos</p>
+                        <p class="text-gray-500 text-sm mt-1">PDF, APK, ZIP, MP4, MP3 (max. 100MB)</p>
+                    </div>
+                    <div id="uploadedFilesList" class="mt-4 space-y-2"></div>
+                    <div id="uploadProgress" class="hidden mt-3">
+                        <div class="flex items-center">
+                            <div class="flex-1 bg-white/10 rounded-full h-2">
+                                <div id="progressBar" class="bg-purple-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                            </div>
+                            <span id="progressText" class="ml-3 text-sm text-gray-400">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">
+                        <i class="fas fa-link mr-2 text-purple-400"></i>URLs Externas (opcional)
+                    </label>
+                    <textarea id="productContent" rows="2" class="w-full px-4 py-3 rounded-xl input-dark" placeholder="Links do Google Drive, Dropbox, etc. (um por linha)"></textarea>
+                </div>
+
+                <!-- Order Bumps Section -->
+                <div class="border-t border-white/10 pt-5">
+                    <div class="flex items-center justify-between mb-4">
+                        <label class="block text-sm font-medium text-gray-300">
+                            <i class="fas fa-bolt mr-2 text-amber-400"></i>Order Bumps (Ofertas Extras)
+                        </label>
+                        <button type="button" onclick="addOrderBump()" class="text-sm text-purple-400 hover:text-purple-300 transition">
+                            <i class="fas fa-plus mr-1"></i>Adicionar
+                        </button>
+                    </div>
+                    <div id="orderBumpsList" class="space-y-3">
+                        <p class="text-gray-500 text-sm text-center py-4">Nenhum order bump adicionado</p>
+                    </div>
+                    <p class="text-gray-500 text-xs mt-2">Order bumps são ofertas adicionais exibidas no checkout para aumentar o ticket médio</p>
+                </div>
+                
+                <button type="submit" id="saveProductBtn" class="w-full btn-premium text-white py-4 rounded-xl font-semibold text-lg">
+                    <i class="fas fa-save mr-2"></i>Salvar Produto
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkoutModal" class="hidden fixed inset-0 z-50 overflow-y-auto">
+        <div class="checkout-container min-h-screen py-8 px-4">
+            <div class="max-w-lg mx-auto">
+                <!-- Close Button -->
+                <button onclick="closeCheckoutModal()" class="mb-6 text-gray-400 hover:text-white transition flex items-center">
+                    <i class="fas fa-arrow-left mr-2"></i>Voltar
+                </button>
+                
+                <!-- Product Card -->
+                <div id="checkoutProductInfo" class="glass-card rounded-2xl p-6 mb-6 border border-white/10">
+                    <!-- Product info will be rendered here -->
+                </div>
+                
+                <!-- Order Bumps -->
+                <div id="checkoutOrderBumps" class="space-y-3 mb-6">
+                    <!-- Order bumps will be rendered here -->
+                </div>
+                
+                <!-- Checkout Form -->
+                <div class="glass-card rounded-2xl p-6 border border-white/10 glow-effect">
+                    <div class="flex items-center justify-center space-x-2 mb-6">
+                        <i class="fas fa-lock text-green-400"></i>
+                        <span class="text-green-400 font-medium">Pagamento 100% Seguro</span>
+                    </div>
+                    
+                    <form id="checkoutForm" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Nome Completo</label>
+                            <input type="text" id="customerName" class="w-full px-4 py-3.5 rounded-xl input-dark" placeholder="Seu nome completo" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">E-mail</label>
+                            <input type="email" id="customerEmail" class="w-full px-4 py-3.5 rounded-xl input-dark" placeholder="seu@email.com" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">CPF</label>
+                            <input type="text" id="customerCPF" class="w-full px-4 py-3.5 rounded-xl input-dark" placeholder="000.000.000-00" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Criar Senha de Acesso</label>
+                            <input type="password" id="customerPassword" class="w-full px-4 py-3.5 rounded-xl input-dark" placeholder="Mínimo 6 caracteres" required>
+                        </div>
+                        
+                        <!-- Payment Method Selection -->
+                        <div class="pt-4">
+                            <label class="block text-sm font-medium text-gray-300 mb-3">Forma de Pagamento</label>
+                            <div class="grid grid-cols-3 gap-2 sm:gap-3">
+                                <div class="payment-method selected border-2 border-purple-500 rounded-xl p-2 sm:p-4 text-center" onclick="selectPaymentMethod('pix')">
+                                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-green-500/20 rounded-lg sm:rounded-xl flex items-center justify-center mx-auto mb-1 sm:mb-2">
+                                        <i class="fas fa-qrcode text-green-400 text-lg sm:text-xl"></i>
+                                    </div>
+                                    <span class="text-xs sm:text-sm font-medium text-white">PIX</span>
+                                    <p class="text-xs text-green-400 mt-0.5 sm:mt-1 hidden sm:block">Aprovação imediata</p>
+                                </div>
+                                <div class="payment-method border-2 border-white/10 rounded-xl p-2 sm:p-4 text-center" onclick="selectPaymentMethod('boleto')">
+                                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-amber-500/20 rounded-lg sm:rounded-xl flex items-center justify-center mx-auto mb-1 sm:mb-2">
+                                        <i class="fas fa-barcode text-amber-400 text-lg sm:text-xl"></i>
+                                    </div>
+                                    <span class="text-xs sm:text-sm font-medium text-white">Boleto</span>
+                                    <p class="text-xs text-amber-400 mt-0.5 sm:mt-1 hidden sm:block">Até 3 dias úteis</p>
+                                </div>
+                                <div class="payment-method border-2 border-white/10 rounded-xl p-2 sm:p-4 text-center" onclick="selectPaymentMethod('card')">
+                                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-500/20 rounded-lg sm:rounded-xl flex items-center justify-center mx-auto mb-1 sm:mb-2">
+                                        <i class="fas fa-credit-card text-blue-400 text-lg sm:text-xl"></i>
+                                    </div>
+                                    <span class="text-xs sm:text-sm font-medium text-white">Cartão</span>
+                                    <p class="text-xs text-blue-400 mt-0.5 sm:mt-1 hidden sm:block">Até 12x</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Card Details (hidden by default) -->
+                        <div id="cardDetails" class="hidden space-y-4 pt-4 border-t border-white/10 mt-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Número do Cartão</label>
+                                <input type="text" id="cardNumber" class="w-full px-4 py-3.5 rounded-xl input-dark" placeholder="0000 0000 0000 0000" maxlength="19">
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">Validade</label>
+                                    <input type="text" id="cardExpiry" class="w-full px-4 py-3.5 rounded-xl input-dark" placeholder="MM/AA" maxlength="5">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">CVV</label>
+                                    <input type="text" id="cardCVV" class="w-full px-4 py-3.5 rounded-xl input-dark" placeholder="123" maxlength="4">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Nome no Cartão</label>
+                                <input type="text" id="cardName" class="w-full px-4 py-3.5 rounded-xl input-dark" placeholder="Nome como está no cartão">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Parcelas</label>
+                                <select id="installments" class="w-full px-4 py-3.5 rounded-xl input-dark">
+                                    <option value="1">1x sem juros</option>
+                                    <option value="2">2x sem juros</option>
+                                    <option value="3">3x sem juros</option>
+                                    <option value="6">6x sem juros</option>
+                                    <option value="12">12x sem juros</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Total -->
+                        <div class="bg-white/5 rounded-xl p-4 mt-4">
+                            <div class="flex justify-between items-center text-gray-400 mb-2">
+                                <span>Subtotal</span>
+                                <span id="checkoutSubtotal">R$ 0,00</span>
+                            </div>
+                            <div id="checkoutBumpsTotal" class="hidden flex justify-between items-center text-amber-400 mb-2">
+                                <span>Ofertas adicionais</span>
+                                <span id="bumpsValue">R$ 0,00</span>
+                            </div>
+                            <div class="flex justify-between items-center text-white text-xl font-bold pt-2 border-t border-white/10">
+                                <span>Total</span>
+                                <span id="checkoutTotal" class="text-green-400">R$ 0,00</span>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" id="payButton" class="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-4 rounded-xl font-bold text-lg hover:shadow-lg hover:shadow-green-500/25 transition-all hover:-translate-y-0.5 pulse-glow">
+                            <i class="fas fa-lock mr-2"></i>FINALIZAR COMPRA
+                        </button>
+                    </form>
+                    
+                    <div class="flex items-center justify-center space-x-4 mt-6 pt-4 border-t border-white/10">
+                        <div class="secure-badge px-3 py-1.5 rounded-lg flex items-center space-x-2">
+                            <i class="fas fa-shield-alt text-green-400"></i>
+                            <span class="text-green-400 text-xs">SSL Seguro</span>
+                        </div>
+                        <div class="secure-badge px-3 py-1.5 rounded-lg flex items-center space-x-2">
+                            <i class="fas fa-lock text-green-400"></i>
+                            <span class="text-green-400 text-xs">Dados Protegidos</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Guarantee -->
+                <div class="text-center mt-6 text-gray-400 text-sm">
+                    <i class="fas fa-medal text-amber-400 mr-2"></i>
+                    Garantia de 7 dias ou seu dinheiro de volta
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PIX Payment Modal -->
+    <div id="pixModal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center z-[60] p-4 overflow-y-auto">
+        <div class="glass-card rounded-2xl sm:rounded-3xl w-full max-w-md p-5 sm:p-8 text-center slide-up glow-effect my-4">
+            <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+                <i class="fas fa-qrcode text-white text-2xl sm:text-3xl"></i>
+            </div>
+            <h3 class="text-xl sm:text-2xl font-bold text-white mb-2">Pague com PIX</h3>
+            <p class="text-gray-400 mb-4 sm:mb-6 text-sm sm:text-base">Escaneie o QR Code ou copie o código</p>
+            
+            <!-- QR Code -->
+            <div class="bg-white p-3 sm:p-4 rounded-xl sm:rounded-2xl inline-block mb-4 sm:mb-6">
+                <div id="qrCodeContainer" class="w-40 h-40 sm:w-48 sm:h-48 flex items-center justify-center">
+                    <!-- QR Code será gerado aqui -->
+                </div>
+            </div>
+            
+            <!-- Timer -->
+            <div class="flex items-center justify-center space-x-2 mb-3 sm:mb-4">
+                <i class="fas fa-clock text-amber-400"></i>
+                <span class="text-amber-400" id="pixTimer">30:00</span>
+                <span class="text-gray-400 text-xs sm:text-sm">para pagar</span>
+            </div>
+            
+            <!-- PIX Code -->
+            <div class="bg-white/5 rounded-xl p-3 sm:p-4 mb-4">
+                <p class="text-xs text-gray-400 mb-2">Código PIX Copia e Cola:</p>
+                <p id="pixCode" class="pix-code text-green-400 bg-black/30 p-2 sm:p-3 rounded-lg text-xs"></p>
+            </div>
+            
+            <button onclick="copyPixCode()" id="copyPixBtn" class="copy-btn w-full bg-green-500 text-white py-2.5 sm:py-3 rounded-xl font-semibold mb-4 hover:bg-green-600 transition text-sm sm:text-base">
+                <i class="fas fa-copy mr-2"></i>Copiar Código PIX
+            </button>
+            
+            <div class="flex items-center justify-center space-x-2 text-xs sm:text-sm text-gray-400">
+                <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span>Aguardando pagamento...</span>
+            </div>
+            
+            <button onclick="simulatePixPayment()" class="mt-3 sm:mt-4 text-purple-400 hover:text-purple-300 text-xs sm:text-sm transition">
+                <i class="fas fa-check-circle mr-1"></i>Simular pagamento confirmado
+            </button>
+            
+            <button onclick="closePixModal()" class="mt-3 sm:mt-4 text-gray-500 hover:text-gray-400 text-xs sm:text-sm block mx-auto">
+                Cancelar
+            </button>
+        </div>
+    </div>
+
+    <!-- Boleto Payment Modal -->
+    <div id="boletoModal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center z-[60] p-4 overflow-y-auto">
+        <div class="glass-card rounded-2xl sm:rounded-3xl w-full max-w-md p-5 sm:p-8 text-center slide-up glow-effect my-4">
+            <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-amber-500 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+                <i class="fas fa-barcode text-white text-2xl sm:text-3xl"></i>
+            </div>
+            <h3 class="text-xl sm:text-2xl font-bold text-white mb-2">Boleto Gerado!</h3>
+            <p class="text-gray-400 mb-4 sm:mb-6 text-sm sm:text-base">Pague até o vencimento para liberar seu acesso</p>
+            
+            <!-- Barcode -->
+            <div class="bg-white p-3 sm:p-4 rounded-xl sm:rounded-2xl mb-4 sm:mb-6 overflow-x-auto">
+                <div class="flex items-center justify-center space-x-0.5 h-12 sm:h-16 min-w-[200px]">
+                    <!-- Simulated barcode -->
+                    <div id="barcodeContainer" class="flex items-end space-x-0.5 h-full"></div>
+                </div>
+            </div>
+            
+            <!-- Boleto Info -->
+            <div class="bg-white/5 rounded-xl p-3 sm:p-4 mb-4 text-left">
+                <div class="flex justify-between mb-2">
+                    <span class="text-gray-400 text-xs sm:text-sm">Vencimento:</span>
+                    <span class="text-white font-medium text-sm sm:text-base" id="boletoVencimento"></span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-400 text-xs sm:text-sm">Valor:</span>
+                    <span class="text-green-400 font-bold text-sm sm:text-base" id="boletoValor"></span>
+                </div>
+            </div>
+            
+            <!-- Linha Digitável -->
+            <div class="bg-white/5 rounded-xl p-3 sm:p-4 mb-4">
+                <p class="text-xs text-gray-400 mb-2">Linha Digitável:</p>
+                <p id="boletoCode" class="font-mono text-xs sm:text-sm text-amber-400 bg-black/30 p-2 sm:p-3 rounded-lg break-all"></p>
+            </div>
+            
+            <button onclick="copyBoletoCode()" id="copyBoletoBtn" class="copy-btn w-full bg-amber-500 text-white py-2.5 sm:py-3 rounded-xl font-semibold mb-4 hover:bg-amber-600 transition text-sm sm:text-base">
+                <i class="fas fa-copy mr-2"></i>Copiar Linha Digitável
+            </button>
+            
+            <button onclick="simulateBoletoPayment()" class="text-purple-400 hover:text-purple-300 text-xs sm:text-sm transition">
+                <i class="fas fa-check-circle mr-1"></i>Simular pagamento confirmado
+            </button>
+            
+            <button onclick="closeBoletoModal()" class="mt-3 sm:mt-4 text-gray-500 hover:text-gray-400 text-xs sm:text-sm block mx-auto">
+                Fechar
+            </button>
+        </div>
+    </div>
+
+    <!-- Member Area Page - Netflix Style -->
+    <div id="memberAreaPage" class="hidden min-h-screen bg-[#0a0a0f]">
+        <!-- Netflix-style Header -->
+        <nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" id="memberNav">
+            <div class="bg-gradient-to-b from-black/90 via-black/60 to-transparent px-4 sm:px-8 py-4">
+                <div class="flex justify-between items-center max-w-[1800px] mx-auto">
+                    <div class="flex items-center space-x-6 sm:space-x-10">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-10 h-10 bg-gradient-to-br from-purple-600 to-pink-600 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-play text-white text-sm"></i>
+                            </div>
+                            <span class="text-xl sm:text-2xl font-black text-white tracking-tight">BRUNO<span class="text-purple-500">+</span></span>
+                        </div>
+                        <div class="hidden md:flex items-center space-x-6">
+                            <a href="#" class="text-white font-medium hover:text-gray-300 transition">Início</a>
+                            <a href="#" class="text-gray-400 hover:text-white transition">Minha Lista</a>
+                            <a href="#" class="text-gray-400 hover:text-white transition">Cursos</a>
+                            <a href="#" class="text-gray-400 hover:text-white transition">E-books</a>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button class="hidden sm:flex items-center space-x-2 text-gray-300 hover:text-white transition">
+                            <i class="fas fa-search text-lg"></i>
+                        </button>
+                        <button class="hidden sm:flex items-center space-x-2 text-gray-300 hover:text-white transition">
+                            <i class="fas fa-bell text-lg"></i>
+                        </button>
+                        <div class="flex items-center space-x-3 cursor-pointer group" onclick="logoutMember()">
+                            <div class="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-purple-500 to-pink-500 rounded-md flex items-center justify-center">
+                                <span class="text-white font-bold text-sm" id="memberInitial">U</span>
+                            </div>
+                            <i class="fas fa-caret-down text-white text-xs group-hover:rotate-180 transition-transform hidden sm:block"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Banner -->
+        <div id="heroBanner" class="relative h-[70vh] sm:h-[85vh] overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-r from-black via-black/50 to-transparent z-10"></div>
+            <div class="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#0a0a0f] to-transparent z-10"></div>
+            <div id="heroImage" class="absolute inset-0 bg-cover bg-center transform scale-105" style="background-image: url('https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=1920&q=80');"></div>
+            
+            <div class="relative z-20 h-full flex items-center px-4 sm:px-12 max-w-[1800px] mx-auto">
+                <div class="max-w-2xl mt-20 sm:mt-0">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <span class="bg-purple-600 text-white text-xs font-bold px-2 py-1 rounded">EXCLUSIVO</span>
+                        <span class="text-gray-300 text-sm">Conteúdo Premium</span>
+                    </div>
+                    <h1 id="heroTitle" class="text-4xl sm:text-6xl lg:text-7xl font-black text-white leading-tight mb-4">
+                        Bem-vindo à Área VIP
+                    </h1>
+                    <p id="heroDescription" class="text-gray-300 text-base sm:text-lg mb-6 line-clamp-3">
+                        Acesse todos os seus cursos, e-books e conteúdos exclusivos. Sua jornada de conhecimento começa aqui.
+                    </p>
+                    <div class="flex flex-wrap gap-3">
+                        <button onclick="playFirstProduct()" class="flex items-center space-x-2 bg-white hover:bg-gray-200 text-black font-bold px-6 sm:px-8 py-3 rounded-md transition transform hover:scale-105">
+                            <i class="fas fa-play"></i>
+                            <span>Assistir</span>
+                        </button>
+                        <button class="flex items-center space-x-2 bg-gray-500/50 hover:bg-gray-500/70 text-white font-bold px-6 sm:px-8 py-3 rounded-md transition backdrop-blur-sm">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Mais Informações</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Progress indicator -->
+                    <div class="mt-8 hidden sm:block">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-32 h-1 bg-gray-700 rounded-full overflow-hidden">
+                                <div class="w-1/3 h-full bg-purple-500"></div>
+                            </div>
+                            <span class="text-gray-400 text-sm">Continue de onde parou</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mute button -->
+            <button class="absolute bottom-24 right-8 z-20 w-10 h-10 rounded-full border border-gray-400 flex items-center justify-center text-gray-400 hover:text-white hover:border-white transition hidden sm:flex">
+                <i class="fas fa-volume-mute"></i>
+            </button>
+            
+            <!-- Age rating -->
+            <div class="absolute bottom-24 right-24 z-20 flex items-center space-x-3 hidden sm:flex">
+                <div class="bg-gray-800/80 px-3 py-1 border-l-2 border-gray-400">
+                    <span class="text-white text-sm">18+</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Rows -->
+        <div class="relative z-30 -mt-32 sm:-mt-40 px-4 sm:px-12 pb-20 max-w-[1800px] mx-auto space-y-8 sm:space-y-12">
+            
+            <!-- Continue Watching Row -->
+            <div id="continueWatchingRow" class="hidden">
+                <h2 class="text-xl sm:text-2xl font-bold text-white mb-4 flex items-center">
+                    <i class="fas fa-history text-purple-500 mr-3"></i>
+                    Continuar Assistindo
+                </h2>
+                <div class="relative group">
+                    <div id="continueWatchingList" class="flex space-x-3 sm:space-x-4 overflow-x-auto pb-4 scrollbar-hide">
+                        <!-- Continue watching cards -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- My Products Row -->
+            <div>
+                <h2 class="text-xl sm:text-2xl font-bold text-white mb-4 flex items-center">
+                    <i class="fas fa-crown text-amber-500 mr-3"></i>
+                    Meus Produtos
+                </h2>
+                <div class="relative group">
+                    <div id="memberProductsList" class="flex space-x-3 sm:space-x-4 overflow-x-auto pb-4 scrollbar-hide">
+                        <!-- Products will be rendered here -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Courses Row -->
+            <div id="coursesRow" class="hidden">
+                <h2 class="text-xl sm:text-2xl font-bold text-white mb-4 flex items-center">
+                    <i class="fas fa-graduation-cap text-blue-500 mr-3"></i>
+                    Cursos em Vídeo
+                </h2>
+                <div class="relative group">
+                    <div id="coursesProductsList" class="flex space-x-3 sm:space-x-4 overflow-x-auto pb-4 scrollbar-hide">
+                        <!-- Course products -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- E-books Row -->
+            <div id="ebooksRow" class="hidden">
+                <h2 class="text-xl sm:text-2xl font-bold text-white mb-4 flex items-center">
+                    <i class="fas fa-book text-green-500 mr-3"></i>
+                    E-books & PDFs
+                </h2>
+                <div class="relative group">
+                    <div id="ebooksProductsList" class="flex space-x-3 sm:space-x-4 overflow-x-auto pb-4 scrollbar-hide">
+                        <!-- Ebook products -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Apps & Software Row -->
+            <div id="appsRow" class="hidden">
+                <h2 class="text-xl sm:text-2xl font-bold text-white mb-4 flex items-center">
+                    <i class="fas fa-mobile-alt text-pink-500 mr-3"></i>
+                    Apps & Softwares
+                </h2>
+                <div class="relative group">
+                    <div id="appsProductsList" class="flex space-x-3 sm:space-x-4 overflow-x-auto pb-4 scrollbar-hide">
+                        <!-- App products -->
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <!-- Product Detail Modal -->
+        <div id="productDetailModal" class="hidden fixed inset-0 z-[100] overflow-y-auto">
+            <div class="min-h-screen">
+                <!-- Backdrop -->
+                <div class="fixed inset-0 bg-black/80 backdrop-blur-sm" onclick="closeProductDetail()"></div>
+                
+                <!-- Modal Content -->
+                <div class="relative max-w-4xl mx-auto mt-10 sm:mt-20 mb-10 mx-4 sm:mx-auto">
+                    <div class="bg-[#181818] rounded-xl overflow-hidden shadow-2xl">
+                        <!-- Hero Section -->
+                        <div class="relative h-64 sm:h-96">
+                            <div class="absolute inset-0 bg-gradient-to-t from-[#181818] via-transparent to-transparent z-10"></div>
+                            <img id="detailImage" src="" alt="" class="w-full h-full object-cover">
+                            <button onclick="closeProductDetail()" class="absolute top-4 right-4 z-20 w-9 h-9 bg-[#181818] rounded-full flex items-center justify-center text-white hover:bg-gray-700 transition">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            
+                            <!-- Buttons over image -->
+                            <div class="absolute bottom-6 left-6 z-20 flex items-center space-x-3">
+                                <button onclick="playProduct()" class="flex items-center space-x-2 bg-white hover:bg-gray-200 text-black font-bold px-6 py-2 rounded-md transition">
+                                    <i class="fas fa-play"></i>
+                                    <span>Acessar</span>
+                                </button>
+                                <button class="w-10 h-10 rounded-full border-2 border-gray-400 flex items-center justify-center text-white hover:border-white transition">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                                <button class="w-10 h-10 rounded-full border-2 border-gray-400 flex items-center justify-center text-white hover:border-white transition">
+                                    <i class="fas fa-thumbs-up"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Info Section -->
+                        <div class="p-6 sm:p-8">
+                            <div class="flex flex-col sm:flex-row gap-6">
+                                <div class="flex-1">
+                                    <h2 id="detailTitle" class="text-2xl sm:text-3xl font-bold text-white mb-3"></h2>
+                                    <div class="flex items-center space-x-3 mb-4">
+                                        <span class="text-green-500 font-medium">98% relevante</span>
+                                        <span class="text-gray-400">2024</span>
+                                        <span class="border border-gray-500 text-gray-400 text-xs px-1.5 py-0.5 rounded">HD</span>
+                                    </div>
+                                    <p id="detailDescription" class="text-gray-300 leading-relaxed"></p>
+                                </div>
+                                <div class="sm:w-48">
+                                    <p class="text-gray-500 text-sm mb-1">Tipo:</p>
+                                    <p id="detailType" class="text-white mb-3"></p>
+                                    <p class="text-gray-500 text-sm mb-1">Arquivos:</p>
+                                    <p id="detailFiles" class="text-white"></p>
+                                </div>
+                            </div>
+                            
+                            <!-- Files List -->
+                            <div class="mt-8">
+                                <h3 class="text-xl font-bold text-white mb-4">Conteúdo Disponível</h3>
+                                <div id="detailFilesList" class="space-y-2">
+                                    <!-- Files will be rendered here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="bg-[#0a0a0f] border-t border-white/5 px-4 sm:px-12 py-10">
+            <div class="max-w-[1800px] mx-auto">
+                <div class="flex items-center space-x-4 mb-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook text-xl"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram text-xl"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter text-xl"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-youtube text-xl"></i></a>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm text-gray-500 mb-6">
+                    <a href="#" class="hover:text-gray-300">Central de Ajuda</a>
+                    <a href="#" class="hover:text-gray-300">Termos de Uso</a>
+                    <a href="#" class="hover:text-gray-300">Privacidade</a>
+                    <a href="#" class="hover:text-gray-300">Contato</a>
+                </div>
+                <p class="text-gray-600 text-sm">© 2024 Bruno Rodling. Todos os direitos reservados.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center z-[70] p-4">
+        <div class="glass-card rounded-2xl sm:rounded-3xl w-full max-w-md p-6 sm:p-8 text-center slide-up glow-effect">
+            <div class="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+                <i class="fas fa-check text-white text-3xl sm:text-4xl"></i>
+            </div>
+            <h3 class="text-2xl sm:text-3xl font-bold text-white mb-2 sm:mb-3">Pagamento Aprovado!</h3>
+            <p class="text-gray-400 mb-6 sm:mb-8 text-sm sm:text-base">Seu acesso foi liberado com sucesso. Você receberá um e-mail com os dados de acesso.</p>
+            <button onclick="goToMemberArea()" class="w-full btn-premium text-white py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg">
+                <i class="fas fa-crown mr-2"></i>Acessar Área de Membros
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="fixed bottom-6 right-6 z-[200] space-y-3"></div>
+
+    <script>
+        // ==================== INDEXEDDB DATABASE ====================
+        const DB_NAME = 'BrunoRodlingDB';
+        const DB_VERSION = 2;
+        let db = null;
+
+        function initDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+                
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => { db = request.result; resolve(db); };
+                
+                request.onupgradeneeded = (event) => {
+                    const database = event.target.result;
+                    if (!database.objectStoreNames.contains('products')) database.createObjectStore('products', { keyPath: 'id' });
+                    if (!database.objectStoreNames.contains('sales')) database.createObjectStore('sales', { keyPath: 'id' });
+                    if (!database.objectStoreNames.contains('members')) database.createObjectStore('members', { keyPath: 'id' });
+                    if (!database.objectStoreNames.contains('settings')) database.createObjectStore('settings', { keyPath: 'id' });
+                };
+            });
+        }
+
+        function getAllFromStore(storeName) {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction(storeName, 'readonly');
+                const store = transaction.objectStore(storeName);
+                const request = store.getAll();
+                request.onsuccess = () => resolve(request.result || []);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        function saveToStore(storeName, item) {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction(storeName, 'readwrite');
+                const store = transaction.objectStore(storeName);
+                const request = store.put(item);
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        function deleteFromStore(storeName, id) {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction(storeName, 'readwrite');
+                const store = transaction.objectStore(storeName);
+                const request = store.delete(id);
+                request.onsuccess = () => resolve();
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        // ==================== BACKEND API CONFIG ====================
+        // Configure a URL do seu backend aqui
+        // Para desenvolvimento local: http://localhost:3000
+        // Para produção (Vercel): https://seu-projeto.vercel.app
+        const API_CONFIG = {
+            // Altere para a URL do seu backend após o deploy
+            baseUrl: 'http://localhost:3000',
+            // Defina como true quando o backend estiver online
+            useBackend: true
+        };
+
+        // ==================== DATA STORE ====================
+        const ADMIN_USER = 'BrunoRodling28';
+        const ADMIN_PASS = '@_Mi&Bru27';
+
+        let products = [];
+        let sales = [];
+        let members = [];
+        let settings = {};
+        let uploadedFiles = [];
+        let productImageData = '';
+        let orderBumps = [];
+        let selectedOrderBumps = [];
+        let selectedProduct = null;
+        let selectedPaymentMethod = 'pix';
+        let currentCheckoutData = null;
+        let pixTimerInterval = null;
+        let currentPaymentId = null;
+
+        async function loadAllData() {
+            products = await getAllFromStore('products');
+            sales = await getAllFromStore('sales');
+            members = await getAllFromStore('members');
+            const savedSettings = await getAllFromStore('settings');
+            if (savedSettings.length > 0) {
+                settings = savedSettings[0];
+            }
+        }
+
+        // ==================== MOBILE MENU ====================
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const icon = document.getElementById('menuIcon');
+            
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                menu.classList.add('hidden');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        }
+
+        // ==================== NAVIGATION ====================
+        function hideAllPages() {
+            document.querySelectorAll('#loginPage, #dashboardPage, #memberAreaPage, #memberLoginPage').forEach(p => p.classList.add('hidden'));
+        }
+
+        function showAdminLogin() { hideAllPages(); document.getElementById('loginPage').classList.remove('hidden'); }
+        function showMemberLogin() { hideAllPages(); document.getElementById('memberLoginPage').classList.remove('hidden'); }
+        function showMemberArea() { 
+            hideAllPages(); 
+            document.getElementById('memberAreaPage').classList.remove('hidden');
+            // Reset rows visibility
+            document.getElementById('coursesRow').classList.add('hidden');
+            document.getElementById('ebooksRow').classList.add('hidden');
+            document.getElementById('appsRow').classList.add('hidden');
+            renderMemberProducts(); 
+        }
+        
+        function showDashboard() {
+            hideAllPages();
+            document.getElementById('dashboardPage').classList.remove('hidden');
+            showSection('dashboard');
+            updateDashboard();
+        }
+
+        function showSection(section) {
+            document.getElementById('dashboardContent').classList.add('hidden');
+            document.getElementById('productsContent').classList.add('hidden');
+            document.getElementById('membersContent').classList.add('hidden');
+            document.getElementById('settingsContent').classList.add('hidden');
+            document.getElementById(section + 'Content').classList.remove('hidden');
+            
+            if (section === 'dashboard') updateDashboard();
+            if (section === 'products') renderProducts();
+            if (section === 'members') renderMembers();
+            if (section === 'settings') loadSettings();
+        }
+
+        // ==================== LOGIN ====================
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (username === ADMIN_USER && password === ADMIN_PASS) {
+                localStorage.setItem('adminLoggedIn', 'true');
+                showDashboard();
+            } else {
+                const error = document.getElementById('loginError');
+                error.textContent = 'Credenciais inválidas!';
+                error.classList.remove('hidden');
+            }
+        });
+
+        function logout() { localStorage.removeItem('adminLoggedIn'); showMemberLogin(); }
+
+        document.getElementById('memberLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('memberEmail').value;
+            const password = document.getElementById('memberPassword').value;
+            const member = members.find(m => m.email === email && m.password === password);
+            
+            if (member) {
+                localStorage.setItem('currentMember', email);
+                showMemberArea();
+            } else {
+                const error = document.getElementById('memberLoginError');
+                error.textContent = 'E-mail ou senha incorretos!';
+                error.classList.remove('hidden');
+            }
+        });
+
+        function logoutMember() { localStorage.removeItem('currentMember'); showMemberLogin(); }
+
+        // ==================== SETTINGS ====================
+        function loadSettings() {
+            if (settings.pixName) document.getElementById('pixName').value = settings.pixName;
+            if (settings.storeName) document.getElementById('storeName').value = settings.storeName;
+            if (settings.storeEmail) document.getElementById('storeEmail').value = settings.storeEmail;
+            if (settings.storeWhatsapp) document.getElementById('storeWhatsapp').value = settings.storeWhatsapp;
+            if (settings.backendUrl) {
+                document.getElementById('backendUrl').value = settings.backendUrl;
+                API_CONFIG.baseUrl = settings.backendUrl;
+            }
+            
+            // Testar conexão com o backend
+            testBackendConnection();
+        }
+        
+        async function testBackendConnection() {
+            const statusDiv = document.getElementById('backendStatus');
+            const urlInput = document.getElementById('backendUrl');
+            
+            // Atualizar URL
+            API_CONFIG.baseUrl = urlInput.value;
+            
+            // Mostrar status de verificação
+            statusDiv.innerHTML = `
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-spinner fa-spin text-amber-400 text-xl"></i>
+                    <div>
+                        <p class="text-amber-400 font-semibold">Verificando conexão...</p>
+                        <p class="text-amber-300/70 text-sm">Aguarde</p>
+                    </div>
+                </div>
+                <span class="px-3 py-1 bg-amber-500/20 text-amber-400 rounded-full text-xs font-medium">VERIFICANDO</span>
+            `;
+            statusDiv.className = 'flex items-center justify-between p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl';
+            
+            try {
+                const isConnected = await checkBackendStatus();
+                
+                if (isConnected) {
+                    statusDiv.innerHTML = `
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-check-circle text-green-400 text-xl"></i>
+                            <div>
+                                <p class="text-green-400 font-semibold">Backend Conectado</p>
+                                <p class="text-green-300/70 text-sm">API Asaas integrada</p>
+                            </div>
+                        </div>
+                        <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-medium">ONLINE</span>
+                    `;
+                    statusDiv.className = 'flex items-center justify-between p-4 bg-green-500/10 border border-green-500/30 rounded-xl';
+                    
+                    // Salvar URL nas configurações
+                    settings.backendUrl = urlInput.value;
+                    await saveToStore('settings', { ...settings, id: 'main' });
+                    
+                    showToast('Backend conectado com sucesso!', 'success');
+                } else {
+                    throw new Error('Não conectado');
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-times-circle text-red-400 text-xl"></i>
+                        <div>
+                            <p class="text-red-400 font-semibold">Backend Offline</p>
+                            <p class="text-red-300/70 text-sm">Verifique se o servidor está rodando</p>
+                        </div>
+                    </div>
+                    <span class="px-3 py-1 bg-red-500/20 text-red-400 rounded-full text-xs font-medium">OFFLINE</span>
+                `;
+                statusDiv.className = 'flex items-center justify-between p-4 bg-red-500/10 border border-red-500/30 rounded-xl';
+                
+                showToast('Não foi possível conectar ao backend', 'error');
+            }
+        }
+
+        async function savePaymentSettings() {
+            settings = {
+                id: 'main',
+                pixName: document.getElementById('pixName').value,
+                storeName: document.getElementById('storeName').value,
+                storeEmail: document.getElementById('storeEmail').value,
+                storeWhatsapp: document.getElementById('storeWhatsapp').value
+            };
+            await saveToStore('settings', settings);
+            showToast('Configurações salvas com sucesso!', 'success');
+        }
+
+        // ==================== DASHBOARD ====================
+        function updateDashboard() {
+            const totalEarnings = sales.reduce((sum, sale) => sum + sale.amount, 0);
+            document.getElementById('totalEarnings').textContent = formatCurrency(totalEarnings);
+            document.getElementById('totalSales').textContent = sales.length;
+            document.getElementById('totalProducts').textContent = products.length;
+            document.getElementById('totalMembers').textContent = members.length;
+            
+            const recentSalesDiv = document.getElementById('recentSalesList');
+            if (sales.length === 0) {
+                recentSalesDiv.innerHTML = '<p class="text-gray-500 text-center py-8">Nenhuma venda registrada</p>';
+            } else {
+                recentSalesDiv.innerHTML = sales.slice(-10).reverse().map(sale => `
+                    <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl hover:bg-white/10 transition">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 ${sale.paymentMethod === 'pix' ? 'bg-green-500/20' : sale.paymentMethod === 'boleto' ? 'bg-amber-500/20' : 'bg-blue-500/20'} rounded-xl flex items-center justify-center">
+                                <i class="fas ${sale.paymentMethod === 'pix' ? 'fa-qrcode text-green-400' : sale.paymentMethod === 'boleto' ? 'fa-barcode text-amber-400' : 'fa-credit-card text-blue-400'}"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-white">${sale.productName}</p>
+                                <p class="text-sm text-gray-400">${sale.customerName} • ${sale.paymentMethod.toUpperCase()}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold text-green-400">${formatCurrency(sale.amount)}</p>
+                            <p class="text-sm text-gray-500">${new Date(sale.date).toLocaleDateString('pt-BR')}</p>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // ==================== PRODUCTS ====================
+        function renderProducts() {
+            const container = document.getElementById('productsList');
+            if (products.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-3 text-center py-16">
+                        <div class="w-20 h-20 bg-purple-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-box-open text-purple-400 text-3xl"></i>
+                        </div>
+                        <p class="text-gray-400">Nenhum produto cadastrado</p>
+                        <button onclick="openProductModal()" class="mt-4 text-purple-400 hover:text-purple-300 transition">
+                            <i class="fas fa-plus mr-2"></i>Criar primeiro produto
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = products.map(product => {
+                const fileCount = (product.files ? product.files.length : 0) + (product.content ? product.content.split('\n').filter(l => l.trim()).length : 0);
+                const bumpCount = product.orderBumps ? product.orderBumps.length : 0;
+                return `
+                <div class="glass-card rounded-2xl overflow-hidden card-hover border border-white/5">
+                    <div class="relative">
+                        <img src="${product.image || 'https://via.placeholder.com/400x200/1a1a25/8b5cf6?text=' + encodeURIComponent(product.name)}" alt="${product.name}" class="w-full h-48 object-cover">
+                        <div class="absolute top-3 right-3 flex space-x-2">
+                            ${fileCount > 0 ? `<span class="bg-green-500/90 text-white text-xs px-2 py-1 rounded-lg"><i class="fas fa-file mr-1"></i>${fileCount}</span>` : ''}
+                            ${bumpCount > 0 ? `<span class="bg-amber-500/90 text-white text-xs px-2 py-1 rounded-lg"><i class="fas fa-bolt mr-1"></i>${bumpCount}</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="p-5">
+                        <span class="text-xs font-medium text-purple-400 bg-purple-500/20 px-3 py-1 rounded-full">${getTypeLabel(product.type)}</span>
+                        <h3 class="text-lg font-bold text-white mt-3">${product.name}</h3>
+                        <p class="text-gray-400 text-sm mt-2 line-clamp-2">${product.description}</p>
+                        <div class="flex items-center justify-between mt-5 pt-4 border-t border-white/10">
+                            <span class="text-2xl font-bold text-green-400">${formatCurrency(product.price)}</span>
+                            <div class="flex space-x-2">
+                                <button onclick="editProduct(${product.id})" class="w-9 h-9 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition flex items-center justify-center" title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button onclick="deleteProduct(${product.id})" class="w-9 h-9 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition flex items-center justify-center" title="Excluir">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                <button onclick="copyCheckoutLink(${product.id})" class="w-9 h-9 bg-green-500/20 text-green-400 rounded-lg hover:bg-green-500/30 transition flex items-center justify-center" title="Copiar link">
+                                    <i class="fas fa-link"></i>
+                                </button>
+                                <button onclick="openCheckoutPreview(${product.id})" class="w-9 h-9 bg-purple-500/20 text-purple-400 rounded-lg hover:bg-purple-500/30 transition flex items-center justify-center" title="Checkout">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
+        // ==================== ORDER BUMPS ====================
+        function addOrderBump() {
+            const bumpId = Date.now();
+            orderBumps.push({ id: bumpId, name: '', price: 0, description: '' });
+            renderOrderBumps();
+        }
+
+        function removeOrderBump(id) {
+            orderBumps = orderBumps.filter(b => b.id !== id);
+            renderOrderBumps();
+        }
+
+        function renderOrderBumps() {
+            const container = document.getElementById('orderBumpsList');
+            if (orderBumps.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-sm text-center py-4">Nenhum order bump adicionado</p>';
+                return;
+            }
+            
+            container.innerHTML = orderBumps.map((bump, index) => `
+                <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-amber-400 text-sm font-medium"><i class="fas fa-bolt mr-2"></i>Order Bump ${index + 1}</span>
+                        <button type="button" onclick="removeOrderBump(${bump.id})" class="text-red-400 hover:text-red-300">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <input type="text" placeholder="Nome do bump" value="${bump.name}" onchange="updateOrderBump(${bump.id}, 'name', this.value)" class="col-span-2 px-3 py-2 rounded-lg input-dark text-sm">
+                        <input type="number" placeholder="Preço" value="${bump.price || ''}" onchange="updateOrderBump(${bump.id}, 'price', parseFloat(this.value))" class="px-3 py-2 rounded-lg input-dark text-sm">
+                        <input type="text" placeholder="Descrição curta" value="${bump.description}" onchange="updateOrderBump(${bump.id}, 'description', this.value)" class="px-3 py-2 rounded-lg input-dark text-sm">
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateOrderBump(id, field, value) {
+            const bump = orderBumps.find(b => b.id === id);
+            if (bump) bump[field] = value;
+        }
+
+        // ==================== IMAGE UPLOAD ====================
+        document.getElementById('imageUpload').addEventListener('change', handleImageUpload);
+        
+        const imageDropZone = document.getElementById('imageDropZone');
+        imageDropZone.addEventListener('dragover', (e) => { e.preventDefault(); imageDropZone.classList.add('border-purple-500'); });
+        imageDropZone.addEventListener('dragleave', (e) => { e.preventDefault(); imageDropZone.classList.remove('border-purple-500'); });
+        imageDropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            imageDropZone.classList.remove('border-purple-500');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) processImageFile(file);
+        });
+
+        function handleImageUpload(e) { if (e.target.files[0]) processImageFile(e.target.files[0]); }
+
+        function processImageFile(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const maxWidth = 800, maxHeight = 600;
+                    let width = img.width, height = img.height;
+                    
+                    if (width > maxWidth) { height *= maxWidth / width; width = maxWidth; }
+                    if (height > maxHeight) { width *= maxHeight / height; height = maxHeight; }
+                    
+                    canvas.width = width; canvas.height = height;
+                    canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+                    
+                    productImageData = canvas.toDataURL('image/jpeg', 0.7);
+                    document.getElementById('productImage').value = productImageData;
+                    document.getElementById('imagePreview').src = productImageData;
+                    document.getElementById('imagePreviewContainer').classList.remove('hidden');
+                    document.getElementById('imagePlaceholder').classList.add('hidden');
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removeProductImage() {
+            productImageData = '';
+            document.getElementById('productImage').value = '';
+            document.getElementById('imageUpload').value = '';
+            document.getElementById('imagePreviewContainer').classList.add('hidden');
+            document.getElementById('imagePlaceholder').classList.remove('hidden');
+        }
+
+        // ==================== FILE UPLOAD ====================
+        document.getElementById('fileUpload').addEventListener('change', (e) => processFiles(e.target.files));
+        
+        const dropZone = document.getElementById('dropZone');
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-purple-500'); });
+        dropZone.addEventListener('dragleave', (e) => { e.preventDefault(); dropZone.classList.remove('border-purple-500'); });
+        dropZone.addEventListener('drop', (e) => { e.preventDefault(); dropZone.classList.remove('border-purple-500'); processFiles(e.dataTransfer.files); });
+
+        function processFiles(files) {
+            Array.from(files).forEach((file, index) => {
+                if (file.size > 100 * 1024 * 1024) { showToast(`Arquivo "${file.name}" excede 100MB`, 'error'); return; }
+                
+                document.getElementById('uploadProgress').classList.remove('hidden');
+                const reader = new FileReader();
+                reader.onprogress = (e) => {
+                    if (e.lengthComputable) {
+                        const percent = Math.round((e.loaded / e.total) * 100);
+                        document.getElementById('progressBar').style.width = percent + '%';
+                        document.getElementById('progressText').textContent = percent + '%';
+                    }
+                };
+                reader.onload = (e) => {
+                    uploadedFiles.push({ id: Date.now() + index, name: file.name, size: file.size, type: file.type, data: e.target.result });
+                    renderUploadedFiles();
+                    setTimeout(() => document.getElementById('uploadProgress').classList.add('hidden'), 500);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function renderUploadedFiles() {
+            const container = document.getElementById('uploadedFilesList');
+            container.innerHTML = uploadedFiles.map(file => `
+                <div class="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/10">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 ${getFileIconBg(file.name)} rounded-lg flex items-center justify-center">
+                            <i class="${getFileIcon(file.name)} text-white"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium text-white text-sm truncate max-w-xs">${file.name}</p>
+                            <p class="text-xs text-gray-500">${formatFileSize(file.size)}</p>
+                        </div>
+                    </div>
+                    <button type="button" onclick="removeUploadedFile(${file.id})" class="text-red-400 hover:text-red-300 p-2">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function removeUploadedFile(fileId) { uploadedFiles = uploadedFiles.filter(f => f.id !== fileId); renderUploadedFiles(); }
+
+        // ==================== PRODUCT MODAL ====================
+        function openProductModal(productId = null) {
+            document.getElementById('productModal').classList.remove('hidden');
+            document.getElementById('productForm').reset();
+            document.getElementById('productId').value = '';
+            document.getElementById('modalTitle').innerHTML = '<i class="fas fa-box mr-3 text-purple-400"></i>Novo Produto';
+            uploadedFiles = [];
+            orderBumps = [];
+            renderUploadedFiles();
+            renderOrderBumps();
+            removeProductImage();
+            
+            if (productId) {
+                const product = products.find(p => p.id === productId);
+                if (product) {
+                    document.getElementById('modalTitle').innerHTML = '<i class="fas fa-edit mr-3 text-purple-400"></i>Editar Produto';
+                    document.getElementById('productId').value = product.id;
+                    document.getElementById('productName').value = product.name;
+                    document.getElementById('productDesc').value = product.description;
+                    document.getElementById('productPrice').value = product.price;
+                    document.getElementById('productType').value = product.type;
+                    document.getElementById('productContent').value = product.content || '';
+                    
+                    if (product.image) {
+                        productImageData = product.image;
+                        document.getElementById('productImage').value = product.image;
+                        document.getElementById('imagePreview').src = product.image;
+                        document.getElementById('imagePreviewContainer').classList.remove('hidden');
+                        document.getElementById('imagePlaceholder').classList.add('hidden');
+                    }
+                    
+                    if (product.files) { uploadedFiles = [...product.files]; renderUploadedFiles(); }
+                    if (product.orderBumps) { orderBumps = [...product.orderBumps]; renderOrderBumps(); }
+                }
+            }
+        }
+
+        function closeProductModal() { document.getElementById('productModal').classList.add('hidden'); }
+
+        function editProduct(id) { openProductModal(id); }
+
+        async function deleteProduct(id) {
+            if (confirm('Excluir este produto?')) {
+                await deleteFromStore('products', id);
+                products = products.filter(p => p.id !== id);
+                renderProducts();
+                updateDashboard();
+                showToast('Produto excluído!', 'success');
+            }
+        }
+
+        function copyCheckoutLink(id) {
+            navigator.clipboard.writeText(`${window.location.origin}${window.location.pathname}?checkout=${id}`);
+            showToast('Link copiado!', 'success');
+        }
+
+        document.getElementById('productForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const saveBtn = document.getElementById('saveProductBtn');
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Salvando...';
+            saveBtn.disabled = true;
+            
+            try {
+                const id = document.getElementById('productId').value;
+                const productData = {
+                    id: id ? parseInt(id) : Date.now(),
+                    name: document.getElementById('productName').value,
+                    description: document.getElementById('productDesc').value,
+                    price: parseFloat(document.getElementById('productPrice').value),
+                    type: document.getElementById('productType').value,
+                    image: document.getElementById('productImage').value,
+                    content: document.getElementById('productContent').value,
+                    files: uploadedFiles,
+                    orderBumps: orderBumps.filter(b => b.name && b.price)
+                };
+                
+                await saveToStore('products', productData);
+                
+                if (id) {
+                    const index = products.findIndex(p => p.id === parseInt(id));
+                    if (index !== -1) products[index] = productData;
+                    else products.push(productData);
+                } else products.push(productData);
+                
+                closeProductModal();
+                renderProducts();
+                updateDashboard();
+                showToast('Produto salvo!', 'success');
+            } catch (error) {
+                showToast('Erro ao salvar: ' + error.message, 'error');
+            } finally {
+                saveBtn.innerHTML = '<i class="fas fa-save mr-2"></i>Salvar Produto';
+                saveBtn.disabled = false;
+            }
+        });
+
+        // ==================== CHECKOUT ====================
+        function selectPaymentMethod(method) {
+            selectedPaymentMethod = method;
+            document.querySelectorAll('.payment-method').forEach(el => {
+                el.classList.remove('selected');
+                el.classList.add('border-white/10');
+            });
+            event.currentTarget.classList.add('selected');
+            event.currentTarget.classList.remove('border-white/10');
+            
+            // Show/hide card details
+            const cardDetails = document.getElementById('cardDetails');
+            if (method === 'card') {
+                cardDetails.classList.remove('hidden');
+            } else {
+                cardDetails.classList.add('hidden');
+            }
+        }
+
+        function openCheckoutPreview(id) {
+            const product = products.find(p => p.id === id);
+            if (!product) { showToast('Produto não encontrado!', 'error'); return; }
+            
+            selectedProduct = product;
+            selectedOrderBumps = [];
+            selectedPaymentMethod = 'pix';
+            
+            // Reset payment method UI
+            document.querySelectorAll('.payment-method').forEach((el, index) => {
+                if (index === 0) {
+                    el.classList.add('selected');
+                    el.classList.remove('border-white/10');
+                } else {
+                    el.classList.remove('selected');
+                    el.classList.add('border-white/10');
+                }
+            });
+            document.getElementById('cardDetails').classList.add('hidden');
+            
+            document.getElementById('checkoutProductInfo').innerHTML = `
+                <div class="flex items-start space-x-4">
+                    <img src="${product.image || 'https://via.placeholder.com/100/1a1a25/8b5cf6?text=Produto'}" alt="${product.name}" class="w-24 h-24 object-cover rounded-xl">
+                    <div class="flex-1">
+                        <span class="text-xs font-medium text-purple-400 bg-purple-500/20 px-2 py-1 rounded-full">${getTypeLabel(product.type)}</span>
+                        <h4 class="text-xl font-bold text-white mt-2">${product.name}</h4>
+                        <p class="text-gray-400 text-sm mt-1 line-clamp-2">${product.description}</p>
+                    </div>
+                </div>
+            `;
+            
+            // Render order bumps
+            const bumpsContainer = document.getElementById('checkoutOrderBumps');
+            if (product.orderBumps && product.orderBumps.length > 0) {
+                bumpsContainer.innerHTML = `
+                    <p class="text-amber-400 text-sm font-medium mb-2"><i class="fas fa-bolt mr-2"></i>Aproveite estas ofertas especiais!</p>
+                    ${product.orderBumps.map(bump => `
+                        <div class="order-bump-card rounded-xl p-4 cursor-pointer transition" onclick="toggleOrderBump(${bump.id})" id="bump-${bump.id}">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-6 h-6 border-2 border-amber-500 rounded flex items-center justify-center" id="bump-check-${bump.id}">
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-white font-medium">${bump.name}</p>
+                                    <p class="text-gray-400 text-sm">${bump.description}</p>
+                                </div>
+                                <span class="text-amber-400 font-bold">+${formatCurrency(bump.price)}</span>
+                            </div>
+                        </div>
+                    `).join('')}
+                `;
+            } else {
+                bumpsContainer.innerHTML = '';
+            }
+            
+            updateCheckoutTotal();
+            document.getElementById('checkoutModal').classList.remove('hidden');
+        }
+
+        function toggleOrderBump(bumpId) {
+            const bump = selectedProduct.orderBumps.find(b => b.id === bumpId);
+            const card = document.getElementById(`bump-${bumpId}`);
+            const check = document.getElementById(`bump-check-${bumpId}`);
+            
+            if (selectedOrderBumps.includes(bumpId)) {
+                selectedOrderBumps = selectedOrderBumps.filter(id => id !== bumpId);
+                card.classList.remove('selected');
+                check.innerHTML = '';
+            } else {
+                selectedOrderBumps.push(bumpId);
+                card.classList.add('selected');
+                check.innerHTML = '<i class="fas fa-check text-amber-400 text-sm"></i>';
+            }
+            
+            updateCheckoutTotal();
+        }
+
+        function updateCheckoutTotal() {
+            const productPrice = selectedProduct.price;
+            let bumpsTotal = 0;
+            
+            if (selectedProduct.orderBumps) {
+                selectedProduct.orderBumps.forEach(bump => {
+                    if (selectedOrderBumps.includes(bump.id)) bumpsTotal += bump.price;
+                });
+            }
+            
+            const total = productPrice + bumpsTotal;
+            
+            document.getElementById('checkoutSubtotal').textContent = formatCurrency(productPrice);
+            document.getElementById('checkoutTotal').textContent = formatCurrency(total);
+            
+            if (bumpsTotal > 0) {
+                document.getElementById('checkoutBumpsTotal').classList.remove('hidden');
+                document.getElementById('bumpsValue').textContent = formatCurrency(bumpsTotal);
+            } else {
+                document.getElementById('checkoutBumpsTotal').classList.add('hidden');
+            }
+        }
+
+        function closeCheckoutModal() { 
+            document.getElementById('checkoutModal').classList.add('hidden');
+        }
+
+        function openCheckout(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) { showMemberLogin(); return; }
+            openCheckoutPreview(productId);
+        }
+
+        document.getElementById('checkoutForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            await processRealPayment();
+        });
+
+        // ==================== PIX PAYMENT ====================
+        function showPixPayment(amount) {
+            closeCheckoutModal();
+            document.getElementById('pixModal').classList.remove('hidden');
+            
+            // Generate fake PIX code
+            const pixCode = generatePixCode(amount);
+            document.getElementById('pixCode').textContent = pixCode;
+            
+            // Generate QR Code (simple visual representation)
+            generateQRCode(pixCode);
+            
+            // Start timer
+            startPixTimer();
+        }
+
+        function generatePixCode(amount) {
+            const randomPart = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            return `00020126580014br.gov.bcb.pix0136${randomPart}5204000053039865406${amount.toFixed(2)}5802BR5925${settings.pixName || 'Bruno Rodling'}6009SAO PAULO62140510${Date.now()}6304`;
+        }
+
+        function generateQRCode(text) {
+            const container = document.getElementById('qrCodeContainer');
+            // Create a visual QR code representation using blocks
+            let html = '<div class="grid grid-cols-12 gap-0.5">';
+            for (let i = 0; i < 144; i++) {
+                const isBlack = Math.random() > 0.5;
+                html += `<div class="w-3.5 h-3.5 ${isBlack ? 'bg-black' : 'bg-white'}"></div>`;
+            }
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function startPixTimer() {
+            let timeLeft = 30 * 60; // 30 minutes
+            
+            if (pixTimerInterval) clearInterval(pixTimerInterval);
+            
+            pixTimerInterval = setInterval(() => {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                document.getElementById('pixTimer').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(pixTimerInterval);
+                    closePixModal();
+                    showToast('Tempo expirado. Tente novamente.', 'error');
+                }
+            }, 1000);
+        }
+
+        function copyPixCode() {
+            const code = document.getElementById('pixCode').textContent;
+            navigator.clipboard.writeText(code);
+            const btn = document.getElementById('copyPixBtn');
+            btn.innerHTML = '<i class="fas fa-check mr-2"></i>Copiado!';
+            btn.classList.add('copied');
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-copy mr-2"></i>Copiar Código PIX';
+                btn.classList.remove('copied');
+            }, 2000);
+        }
+
+        function simulatePixPayment() {
+            closePixModal();
+            processPaymentSuccess();
+        }
+
+        function closePixModal() {
+            document.getElementById('pixModal').classList.add('hidden');
+            if (pixTimerInterval) clearInterval(pixTimerInterval);
+            stopPaymentStatusCheck();
+            resetPayButton();
+        }
+
+        // ==================== BOLETO PAYMENT ====================
+        function showBoletoPayment(amount) {
+            closeCheckoutModal();
+            document.getElementById('boletoModal').classList.remove('hidden');
+            
+            // Set values
+            const vencimento = new Date();
+            vencimento.setDate(vencimento.getDate() + 3);
+            document.getElementById('boletoVencimento').textContent = vencimento.toLocaleDateString('pt-BR');
+            document.getElementById('boletoValor').textContent = formatCurrency(amount);
+            
+            // Generate barcode
+            generateBarcode();
+            
+            // Generate linha digitável
+            const linhaDigitavel = generateLinhaDigitavel();
+            document.getElementById('boletoCode').textContent = linhaDigitavel;
+        }
+
+        function generateBarcode() {
+            const container = document.getElementById('barcodeContainer');
+            let html = '';
+            for (let i = 0; i < 50; i++) {
+                const width = Math.random() > 0.5 ? 2 : 1;
+                const height = 40 + Math.random() * 20;
+                html += `<div class="bg-black" style="width: ${width}px; height: ${height}px;"></div>`;
+            }
+            container.innerHTML = html;
+        }
+
+        function generateLinhaDigitavel() {
+            const parts = [];
+            for (let i = 0; i < 4; i++) {
+                parts.push(Math.random().toString().substring(2, 7));
+            }
+            return `23793.${parts[0]} ${parts[1]}.${parts[2]}8 ${parts[3]}.${Math.random().toString().substring(2, 8)} 1 ${Date.now().toString().substring(0, 14)}`;
+        }
+
+        function copyBoletoCode() {
+            const code = document.getElementById('boletoCode').textContent;
+            navigator.clipboard.writeText(code);
+            const btn = document.getElementById('copyBoletoBtn');
+            btn.innerHTML = '<i class="fas fa-check mr-2"></i>Copiado!';
+            btn.classList.add('copied');
+            btn.style.background = '#10b981';
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-copy mr-2"></i>Copiar Linha Digitável';
+                btn.classList.remove('copied');
+                btn.style.background = '';
+            }, 2000);
+        }
+
+        function simulateBoletoPayment() {
+            closeBoletoModal();
+            processPaymentSuccess();
+        }
+
+        function closeBoletoModal() {
+            document.getElementById('boletoModal').classList.add('hidden');
+            stopPaymentStatusCheck();
+            resetPayButton();
+        }
+
+        // ==================== PROCESS PAYMENT ====================
+        async function processPaymentSuccess() {
+            if (!currentCheckoutData) return;
+            
+            const sale = {
+                id: Date.now(),
+                productId: currentCheckoutData.productId,
+                productName: currentCheckoutData.productName,
+                amount: currentCheckoutData.amount,
+                customerName: currentCheckoutData.customerName,
+                customerEmail: currentCheckoutData.customerEmail,
+                customerCPF: currentCheckoutData.customerCPF,
+                orderBumps: currentCheckoutData.orderBumps,
+                paymentMethod: currentCheckoutData.paymentMethod,
+                date: new Date().toISOString(),
+                status: 'paid'
+            };
+            
+            await saveToStore('sales', sale);
+            sales.push(sale);
+            
+            // Create/update member
+            const existingMember = members.find(m => m.email === currentCheckoutData.customerEmail);
+            if (existingMember) {
+                if (!existingMember.products.includes(currentCheckoutData.productId)) {
+                    existingMember.products.push(currentCheckoutData.productId);
+                }
+                await saveToStore('members', existingMember);
+            } else {
+                const newMember = {
+                    id: Date.now(),
+                    name: currentCheckoutData.customerName,
+                    email: currentCheckoutData.customerEmail,
+                    password: currentCheckoutData.customerPassword,
+                    products: [currentCheckoutData.productId],
+                    createdAt: new Date().toISOString()
+                };
+                await saveToStore('members', newMember);
+                members.push(newMember);
+            }
+            
+            localStorage.setItem('currentMember', currentCheckoutData.customerEmail);
+            
+            // Show success
+            document.getElementById('successModal').classList.remove('hidden');
+            currentCheckoutData = null;
+        }
+
+        function resetPayButton() {
+            const payButton = document.getElementById('payButton');
+            if (payButton) {
+                payButton.innerHTML = '<i class="fas fa-lock mr-2"></i>FINALIZAR COMPRA';
+                payButton.disabled = false;
+            }
+        }
+
+        function goToMemberArea() { 
+            document.getElementById('successModal').classList.add('hidden'); 
+            showMemberArea(); 
+        }
+
+        // ==================== MEMBERS ====================
+        function renderMembers() {
+            const container = document.getElementById('membersList');
+            if (members.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-8">Nenhum membro registrado</p>';
+                return;
+            }
+            
+            container.innerHTML = members.map(member => `
+                <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl hover:bg-white/10 transition">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-user text-purple-400"></i>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-white">${member.name}</p>
+                            <p class="text-sm text-gray-400">${member.email}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm text-purple-400">${member.products.length} produto(s)</p>
+                        <p class="text-xs text-gray-500">${new Date(member.createdAt).toLocaleDateString('pt-BR')}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        let currentDetailProduct = null;
+        
+        function renderMemberProducts() {
+            const memberEmail = localStorage.getItem('currentMember');
+            const member = members.find(m => m.email === memberEmail);
+            if (!member) { showMemberLogin(); return; }
+            
+            // Set member initial
+            document.getElementById('memberInitial').textContent = member.name.charAt(0).toUpperCase();
+            
+            const memberProducts = products.filter(p => member.products.includes(p.id));
+            const container = document.getElementById('memberProductsList');
+            
+            if (memberProducts.length === 0) {
+                container.innerHTML = '<p class="text-gray-400 text-center py-8">Você ainda não possui produtos. Adquira seu primeiro produto!</p>';
+                return;
+            }
+            
+            // Update hero with first product
+            if (memberProducts.length > 0) {
+                const heroProduct = memberProducts[0];
+                document.getElementById('heroTitle').textContent = heroProduct.name;
+                document.getElementById('heroDescription').textContent = heroProduct.description;
+                if (heroProduct.image) {
+                    document.getElementById('heroImage').style.backgroundImage = `url('${heroProduct.image}')`;
+                }
+            }
+            
+            // Render all products
+            container.innerHTML = memberProducts.map(product => createNetflixCard(product)).join('');
+            
+            // Separate by type
+            const courses = memberProducts.filter(p => p.type === 'curso');
+            const ebooks = memberProducts.filter(p => p.type === 'ebook');
+            const apps = memberProducts.filter(p => p.type === 'app' || p.type === 'software');
+            
+            // Render courses
+            if (courses.length > 0) {
+                document.getElementById('coursesRow').classList.remove('hidden');
+                document.getElementById('coursesProductsList').innerHTML = courses.map(p => createNetflixCard(p)).join('');
+            }
+            
+            // Render ebooks
+            if (ebooks.length > 0) {
+                document.getElementById('ebooksRow').classList.remove('hidden');
+                document.getElementById('ebooksProductsList').innerHTML = ebooks.map(p => createNetflixCard(p)).join('');
+            }
+            
+            // Render apps
+            if (apps.length > 0) {
+                document.getElementById('appsRow').classList.remove('hidden');
+                document.getElementById('appsProductsList').innerHTML = apps.map(p => createNetflixCard(p)).join('');
+            }
+            
+            // Setup scroll effect for header
+            setupMemberNavScroll();
+        }
+        
+        function createNetflixCard(product) {
+            const typeClass = `type-${product.type}`;
+            const fileCount = (product.files ? product.files.length : 0) + (product.content ? product.content.split('\n').filter(l => l.trim()).length : 0);
+            const placeholder = `https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=400&q=80`;
+            
+            return `
+                <div class="netflix-card" onclick="openProductDetail(${product.id})">
+                    <div class="netflix-card-image" style="background-image: url('${product.image || placeholder}');">
+                        <div class="netflix-card-overlay"></div>
+                        <div class="netflix-card-content">
+                            <div class="netflix-card-buttons">
+                                <button class="netflix-card-btn netflix-card-btn-primary" onclick="event.stopPropagation(); playProduct(${product.id})">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                                <button class="netflix-card-btn netflix-card-btn-secondary" onclick="event.stopPropagation(); openProductDetail(${product.id})">
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="absolute top-2 left-2">
+                            <span class="${typeClass} text-white text-xs font-bold px-2 py-0.5 rounded">${getTypeEmoji(product.type)}</span>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <h4 class="text-white text-sm font-medium truncate">${product.name}</h4>
+                        <div class="flex items-center space-x-2 mt-1">
+                            <span class="text-green-500 text-xs font-medium">Liberado</span>
+                            <span class="text-gray-500 text-xs">${fileCount} arquivo${fileCount !== 1 ? 's' : ''}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function getTypeEmoji(type) {
+            const emojis = { curso: '▶ Curso', ebook: '📖 E-book', app: '📱 App', software: '💻 Software', template: '🎨 Template' };
+            return emojis[type] || type;
+        }
+        
+        function openProductDetail(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            
+            currentDetailProduct = product;
+            const placeholder = `https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&q=80`;
+            
+            document.getElementById('detailImage').src = product.image || placeholder;
+            document.getElementById('detailTitle').textContent = product.name;
+            document.getElementById('detailDescription').textContent = product.description;
+            document.getElementById('detailType').textContent = getTypeLabel(product.type);
+            
+            const fileCount = (product.files ? product.files.length : 0) + (product.content ? product.content.split('\n').filter(l => l.trim()).length : 0);
+            document.getElementById('detailFiles').textContent = `${fileCount} arquivo${fileCount !== 1 ? 's' : ''}`;
+            
+            // Render files list
+            const filesList = document.getElementById('detailFilesList');
+            let filesHtml = '';
+            
+            if (product.files && product.files.length > 0) {
+                filesHtml += product.files.map((file, index) => `
+                    <a href="${file.data}" download="${file.name}" class="flex items-center p-4 bg-[#2a2a2a] hover:bg-[#333] rounded-lg transition group">
+                        <div class="w-10 h-10 ${getFileIconBg(file.name)} rounded flex items-center justify-center mr-4">
+                            <i class="${getFileIcon(file.name)} text-white"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-white font-medium">${file.name}</p>
+                            <p class="text-gray-500 text-sm">${formatFileSize(file.size)}</p>
+                        </div>
+                        <div class="text-gray-400 group-hover:text-white transition">
+                            <i class="fas fa-download"></i>
+                        </div>
+                    </a>
+                `).join('');
+            }
+            
+            if (product.content) {
+                const links = product.content.split('\n').filter(l => l.trim());
+                filesHtml += links.map((link, index) => `
+                    <a href="${link.trim()}" target="_blank" class="flex items-center p-4 bg-[#2a2a2a] hover:bg-[#333] rounded-lg transition group">
+                        <div class="w-10 h-10 bg-blue-600 rounded flex items-center justify-center mr-4">
+                            <i class="fas fa-external-link-alt text-white"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-white font-medium">Link Externo ${index + 1}</p>
+                            <p class="text-gray-500 text-sm truncate">${link.trim()}</p>
+                        </div>
+                        <div class="text-gray-400 group-hover:text-white transition">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </a>
+                `).join('');
+            }
+            
+            if (!filesHtml) {
+                filesHtml = '<p class="text-gray-500 text-center py-4">Nenhum arquivo disponível ainda</p>';
+            }
+            
+            filesList.innerHTML = filesHtml;
+            
+            document.getElementById('productDetailModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeProductDetail() {
+            document.getElementById('productDetailModal').classList.add('hidden');
+            document.body.style.overflow = '';
+            currentDetailProduct = null;
+        }
+        
+        function playProduct(productId = null) {
+            const product = productId ? products.find(p => p.id === productId) : currentDetailProduct;
+            if (!product) return;
+            
+            // Try to find a playable file or link
+            if (product.files && product.files.length > 0) {
+                const file = product.files[0];
+                const link = document.createElement('a');
+                link.href = file.data;
+                link.download = file.name;
+                link.click();
+            } else if (product.content) {
+                const firstLink = product.content.split('\n').find(l => l.trim());
+                if (firstLink) {
+                    window.open(firstLink.trim(), '_blank');
+                }
+            } else {
+                showToast('Nenhum arquivo disponível', 'error');
+            }
+        }
+        
+        function playFirstProduct() {
+            const memberEmail = localStorage.getItem('currentMember');
+            const member = members.find(m => m.email === memberEmail);
+            if (!member) return;
+            
+            const memberProducts = products.filter(p => member.products.includes(p.id));
+            if (memberProducts.length > 0) {
+                playProduct(memberProducts[0].id);
+            }
+        }
+        
+        function setupMemberNavScroll() {
+            const nav = document.getElementById('memberNav');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    nav.classList.add('member-nav-scrolled');
+                } else {
+                    nav.classList.remove('member-nav-scrolled');
+                }
+            });
+        }
+
+        // ==================== UTILITIES ====================
+        function formatCurrency(value) { return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value); }
+
+        function getTypeLabel(type) {
+            const labels = { curso: '📚 Curso', ebook: '📖 E-book', app: '📱 App', software: '💻 Software', template: '🎨 Template' };
+            return labels[type] || type;
+        }
+
+        function getFileIcon(filename) {
+            const ext = filename.split('.').pop().toLowerCase();
+            const icons = { pdf: 'fas fa-file-pdf', apk: 'fab fa-android', zip: 'fas fa-file-archive', rar: 'fas fa-file-archive', mp4: 'fas fa-file-video', mp3: 'fas fa-file-audio', doc: 'fas fa-file-word', docx: 'fas fa-file-word', xls: 'fas fa-file-excel', xlsx: 'fas fa-file-excel', png: 'fas fa-file-image', jpg: 'fas fa-file-image', jpeg: 'fas fa-file-image', gif: 'fas fa-file-image' };
+            return icons[ext] || 'fas fa-file';
+        }
+
+        function getFileIconBg(filename) {
+            const ext = filename.split('.').pop().toLowerCase();
+            const colors = { pdf: 'bg-red-500', apk: 'bg-green-500', zip: 'bg-yellow-500', rar: 'bg-yellow-500', mp4: 'bg-purple-500', mp3: 'bg-pink-500', doc: 'bg-blue-500', docx: 'bg-blue-500', xls: 'bg-green-600', xlsx: 'bg-green-600', png: 'bg-indigo-500', jpg: 'bg-indigo-500', jpeg: 'bg-indigo-500', gif: 'bg-indigo-500' };
+            return colors[ext] || 'bg-gray-500';
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024, sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `px-5 py-3 rounded-xl shadow-2xl fade-in flex items-center space-x-3 ${type === 'success' ? 'bg-green-500' : 'bg-red-500'} text-white`;
+            toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i><span>${message}</span>`;
+            document.getElementById('toastContainer').appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // ==================== INIT ====================
+        async function init() {
+            try {
+                await initDB();
+                await loadAllData();
+                document.getElementById('loadingOverlay').classList.add('hidden');
+                
+                const params = new URLSearchParams(window.location.search);
+                const checkoutId = params.get('checkout');
+                
+                if (checkoutId) {
+                    showMemberLogin();
+                    setTimeout(() => openCheckout(parseInt(checkoutId)), 500);
+                } else if (localStorage.getItem('adminLoggedIn') === 'true') {
+                    showDashboard();
+                } else {
+                    const memberEmail = localStorage.getItem('currentMember');
+                    if (memberEmail && members.find(m => m.email === memberEmail)) showMemberArea();
+                    else showMemberLogin();
+                }
+            } catch (error) {
+                document.getElementById('loadingOverlay').innerHTML = `
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-exclamation-triangle text-red-400 text-2xl"></i>
+                        </div>
+                        <p class="text-red-400 font-medium">Erro ao carregar. Recarregue a página.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // ==================== BACKEND API INTEGRATION ====================
+        async function apiRequest(endpoint, method = 'GET', body = null) {
+            const url = `${API_CONFIG.baseUrl}${endpoint}`;
+            
+            const options = {
+                method,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
+            
+            if (body) options.body = JSON.stringify(body);
+
+            try {
+                const response = await fetch(url, options);
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'Erro na API');
+                }
+                
+                return data;
+            } catch (error) {
+                console.error('API Error:', error);
+                throw error;
+            }
+        }
+
+        async function createAsaasCustomer(customerData) {
+            return await apiRequest('/api/customers', 'POST', {
+                name: customerData.name,
+                email: customerData.email,
+                cpfCnpj: customerData.cpf
+            });
+        }
+
+        async function createAsaasPayment(customerId, amount, paymentMethod, productName) {
+            const billingType = {
+                'pix': 'PIX',
+                'boleto': 'BOLETO',
+                'card': 'CREDIT_CARD'
+            };
+
+            return await apiRequest('/api/payments', 'POST', {
+                customerId,
+                value: amount,
+                description: productName,
+                billingType: billingType[paymentMethod]
+            });
+        }
+
+        async function getPixQrCode(paymentId) {
+            return await apiRequest(`/api/payments/${paymentId}/pix`);
+        }
+
+        async function getBoletoIdentificationField(paymentId) {
+            return await apiRequest(`/api/payments/${paymentId}/boleto`);
+        }
+
+        async function getPaymentStatus(paymentId) {
+            return await apiRequest(`/api/payments/${paymentId}/status`);
+        }
+
+        async function processCardPayment(paymentId, cardData, customerData) {
+            const creditCard = {
+                holderName: cardData.name,
+                number: cardData.number.replace(/\s/g, ''),
+                expiryMonth: cardData.expiry.split('/')[0],
+                expiryYear: '20' + cardData.expiry.split('/')[1],
+                ccv: cardData.cvv
+            };
+
+            const creditCardHolderInfo = {
+                name: customerData.name,
+                email: customerData.email,
+                cpfCnpj: customerData.cpf.replace(/\D/g, ''),
+                postalCode: '01310100',
+                addressNumber: '123',
+                phone: '11999999999'
+            };
+
+            return await apiRequest(`/api/payments/${paymentId}/pay-with-card`, 'POST', {
+                creditCard,
+                creditCardHolderInfo
+            });
+        }
+        
+        // Verificar status do backend
+        async function checkBackendStatus() {
+            try {
+                const result = await apiRequest('/api/status');
+                return result.status === 'connected';
+            } catch (error) {
+                console.error('Backend não disponível:', error);
+                return false;
+            }
+        }
+
+        // ==================== REAL PAYMENT PROCESSING ====================
+        async function processRealPayment() {
+            const customerName = document.getElementById('customerName').value;
+            const customerEmail = document.getElementById('customerEmail').value;
+            const customerCPF = document.getElementById('customerCPF').value;
+            const customerPassword = document.getElementById('customerPassword').value;
+
+            if (!customerName || !customerEmail || !customerCPF || !customerPassword) {
+                showToast('Preencha todos os campos obrigatórios', 'error');
+                return;
+            }
+
+            const payButton = document.getElementById('payButton');
+            payButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processando...';
+            payButton.disabled = true;
+
+            try {
+                // Calcular total
+                let bumpsTotal = 0;
+                const purchasedBumps = [];
+                
+                if (selectedProduct.orderBumps) {
+                    selectedProduct.orderBumps.forEach(bump => {
+                        if (selectedOrderBumps.includes(bump.id)) {
+                            bumpsTotal += bump.price;
+                            purchasedBumps.push(bump);
+                        }
+                    });
+                }
+                
+                const totalAmount = selectedProduct.price + bumpsTotal;
+
+                // Salvar dados para após pagamento
+                currentCheckoutData = {
+                    productId: selectedProduct.id,
+                    productName: selectedProduct.name,
+                    amount: totalAmount,
+                    customerName,
+                    customerEmail,
+                    customerCPF,
+                    customerPassword,
+                    orderBumps: purchasedBumps,
+                    paymentMethod: selectedPaymentMethod
+                };
+
+                // Criar cliente no Asaas
+                showToast('Criando registro no sistema...', 'success');
+                const customer = await createAsaasCustomer({
+                    name: customerName,
+                    email: customerEmail,
+                    cpf: customerCPF
+                });
+
+                // Criar cobrança
+                showToast('Gerando cobrança...', 'success');
+                const payment = await createAsaasPayment(
+                    customer.id,
+                    totalAmount,
+                    selectedPaymentMethod,
+                    selectedProduct.name
+                );
+
+                currentPaymentId = payment.id;
+
+                // Processar conforme método de pagamento
+                if (selectedPaymentMethod === 'pix') {
+                    const pixData = await getPixQrCode(payment.id);
+                    showRealPixPayment(pixData, totalAmount);
+                } else if (selectedPaymentMethod === 'boleto') {
+                    const boletoData = await getBoletoIdentificationField(payment.id);
+                    showRealBoletoPayment(boletoData, payment, totalAmount);
+                } else if (selectedPaymentMethod === 'card') {
+                    const cardNumber = document.getElementById('cardNumber').value;
+                    const cardExpiry = document.getElementById('cardExpiry').value;
+                    const cardCVV = document.getElementById('cardCVV').value;
+                    const cardName = document.getElementById('cardName').value;
+
+                    if (!cardNumber || !cardExpiry || !cardCVV || !cardName) {
+                        showToast('Preencha todos os dados do cartão', 'error');
+                        payButton.innerHTML = '<i class="fas fa-lock mr-2"></i>FINALIZAR COMPRA';
+                        payButton.disabled = false;
+                        return;
+                    }
+
+                    await processCardPayment(payment.id, {
+                        number: cardNumber,
+                        expiry: cardExpiry,
+                        cvv: cardCVV,
+                        name: cardName
+                    }, {
+                        name: customerName,
+                        email: customerEmail,
+                        cpf: customerCPF
+                    });
+
+                    await processPaymentSuccess();
+                }
+
+            } catch (error) {
+                console.error('Erro no pagamento:', error);
+                showToast(error.message || 'Erro ao processar pagamento. Verifique os dados.', 'error');
+                payButton.innerHTML = '<i class="fas fa-lock mr-2"></i>FINALIZAR COMPRA';
+                payButton.disabled = false;
+            }
+        }
+
+        function showRealPixPayment(pixData, amount) {
+            closeCheckoutModal();
+            document.getElementById('pixModal').classList.remove('hidden');
+            
+            // Exibir QR Code real do Asaas
+            const qrContainer = document.getElementById('qrCodeContainer');
+            qrContainer.innerHTML = `<img src="data:image/png;base64,${pixData.encodedImage}" alt="QR Code PIX" class="w-48 h-48">`;
+            
+            // Código copia e cola real
+            document.getElementById('pixCode').textContent = pixData.payload;
+            
+            // Iniciar timer e verificação de status
+            startPixTimer();
+            startPaymentStatusCheck();
+        }
+
+        function showRealBoletoPayment(boletoData, payment, amount) {
+            closeCheckoutModal();
+            document.getElementById('boletoModal').classList.remove('hidden');
+            
+            // Data de vencimento
+            const vencimento = new Date(payment.dueDate);
+            document.getElementById('boletoVencimento').textContent = vencimento.toLocaleDateString('pt-BR');
+            document.getElementById('boletoValor').textContent = formatCurrency(amount);
+            
+            // Linha digitável real
+            document.getElementById('boletoCode').textContent = boletoData.identificationField;
+            
+            // Gerar código de barras visual
+            generateBarcode();
+            
+            // Link do boleto PDF
+            if (payment.bankSlipUrl) {
+                const barcodeContainer = document.getElementById('barcodeContainer');
+                barcodeContainer.innerHTML += `
+                    <a href="${payment.bankSlipUrl}" target="_blank" class="block mt-4 text-amber-400 hover:text-amber-300 text-sm">
+                        <i class="fas fa-download mr-1"></i>Baixar Boleto PDF
+                    </a>
+                `;
+            }
+            
+            // Iniciar verificação de status
+            startPaymentStatusCheck();
+        }
+
+        let paymentCheckInterval = null;
+
+        function startPaymentStatusCheck() {
+            if (paymentCheckInterval) clearInterval(paymentCheckInterval);
+            
+            paymentCheckInterval = setInterval(async () => {
+                try {
+                    const status = await getPaymentStatus(currentPaymentId);
+                    
+                    if (status.status === 'RECEIVED' || status.status === 'CONFIRMED') {
+                        clearInterval(paymentCheckInterval);
+                        closePixModal();
+                        closeBoletoModal();
+                        await processPaymentSuccess();
+                    }
+                } catch (error) {
+                    console.error('Erro ao verificar status:', error);
+                }
+            }, 5000); // Verificar a cada 5 segundos
+        }
+
+        function stopPaymentStatusCheck() {
+            if (paymentCheckInterval) {
+                clearInterval(paymentCheckInterval);
+                paymentCheckInterval = null;
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>
