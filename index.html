@@ -7,6 +7,9 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
     <style>
         * {
             font-family: 'Inter', sans-serif;
@@ -1476,56 +1479,58 @@
     <div id="toastContainer" class="fixed bottom-6 right-6 z-[200] space-y-3"></div>
 
     <script>
-        // ==================== INDEXEDDB DATABASE ====================
-        const DB_NAME = 'BrunoRodlingDB';
-        const DB_VERSION = 2;
-        let db = null;
+        // ==================== FIREBASE DATABASE ====================
+        // Configuração do Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAn25RVM7Byqp_G51j-I3pcsUhToCjvdKQ",
+            authDomain: "plataformapremium.firebaseapp.com",
+            projectId: "plataformapremium",
+            storageBucket: "plataformapremium.firebasestorage.app",
+            messagingSenderId: "360578542973",
+            appId: "1:360578542973:web:a59fb24c8faf9267b1f014",
+            measurementId: "G-3SHFBKXGPP"
+        };
 
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Função para inicializar o banco (compatibilidade)
         function initDB() {
-            return new Promise((resolve, reject) => {
-                const request = indexedDB.open(DB_NAME, DB_VERSION);
-                
-                request.onerror = () => reject(request.error);
-                request.onsuccess = () => { db = request.result; resolve(db); };
-                
-                request.onupgradeneeded = (event) => {
-                    const database = event.target.result;
-                    if (!database.objectStoreNames.contains('products')) database.createObjectStore('products', { keyPath: 'id' });
-                    if (!database.objectStoreNames.contains('sales')) database.createObjectStore('sales', { keyPath: 'id' });
-                    if (!database.objectStoreNames.contains('members')) database.createObjectStore('members', { keyPath: 'id' });
-                    if (!database.objectStoreNames.contains('settings')) database.createObjectStore('settings', { keyPath: 'id' });
-                };
-            });
+            return Promise.resolve(db);
         }
 
-        function getAllFromStore(storeName) {
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction(storeName, 'readonly');
-                const store = transaction.objectStore(storeName);
-                const request = store.getAll();
-                request.onsuccess = () => resolve(request.result || []);
-                request.onerror = () => reject(request.error);
-            });
+        // Buscar todos os documentos de uma coleção
+        async function getAllFromStore(collectionName) {
+            try {
+                const snapshot = await db.collection(collectionName).get();
+                return snapshot.docs.map(doc => ({ ...doc.data(), _docId: doc.id }));
+            } catch (error) {
+                console.error('Erro ao buscar dados:', error);
+                return [];
+            }
         }
 
-        function saveToStore(storeName, item) {
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction(storeName, 'readwrite');
-                const store = transaction.objectStore(storeName);
-                const request = store.put(item);
-                request.onsuccess = () => resolve(request.result);
-                request.onerror = () => reject(request.error);
-            });
+        // Salvar documento (criar ou atualizar)
+        async function saveToStore(collectionName, item) {
+            try {
+                const docId = item.id ? item.id.toString() : Date.now().toString();
+                await db.collection(collectionName).doc(docId).set(item);
+                return docId;
+            } catch (error) {
+                console.error('Erro ao salvar:', error);
+                throw error;
+            }
         }
 
-        function deleteFromStore(storeName, id) {
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction(storeName, 'readwrite');
-                const store = transaction.objectStore(storeName);
-                const request = store.delete(id);
-                request.onsuccess = () => resolve();
-                request.onerror = () => reject(request.error);
-            });
+        // Deletar documento
+        async function deleteFromStore(collectionName, id) {
+            try {
+                await db.collection(collectionName).doc(id.toString()).delete();
+            } catch (error) {
+                console.error('Erro ao deletar:', error);
+                throw error;
+            }
         }
 
         // ==================== BACKEND API CONFIG ====================
@@ -2220,15 +2225,32 @@
         }
 
         function openCheckout(productId) {
-            const product = products.find(p => p.id === productId);
-            if (!product) { 
-                showToast('Produto não encontrado!', 'error');
-                showMemberLogin(); 
-                return; 
-            }
-            // Esconder todas as páginas e mostrar apenas o checkout
-            hideAllPages();
-            openCheckoutPreview(productId);
+            // Aguardar produtos carregarem
+            const maxAttempts = 10;
+            let attempts = 0;
+            
+            const tryOpenCheckout = () => {
+                attempts++;
+                const product = products.find(p => p.id === productId);
+                
+                if (product) {
+                    // Produto encontrado - abrir checkout
+                    hideAllPages();
+                    document.getElementById('checkoutModal').classList.remove('hidden');
+                    openCheckoutPreview(productId);
+                } else if (attempts < maxAttempts) {
+                    // Tentar novamente em 300ms
+                    setTimeout(tryOpenCheckout, 300);
+                } else {
+                    // Produto não encontrado após várias tentativas
+                    console.error('Produto não encontrado:', productId);
+                    console.log('Produtos disponíveis:', products);
+                    showToast('Produto não encontrado! Verifique se o link está correto.', 'error');
+                    showMemberLogin();
+                }
+            };
+            
+            tryOpenCheckout();
         }
 
         document.getElementById('checkoutForm').addEventListener('submit', async function(e) {
@@ -2714,7 +2736,11 @@
             try {
                 await initDB();
                 await loadAllData();
-                document.getElementById('loadingOverlay').classList.add('hidden');
+                
+                // Carregar URL do backend das configurações
+                if (settings.backendUrl) {
+                    API_CONFIG.baseUrl = settings.backendUrl.replace(/\/$/, '');
+                }
                 
                 const params = new URLSearchParams(window.location.search);
                 const checkoutId = params.get('checkout');
@@ -2727,18 +2753,22 @@
                             <p class="text-gray-400 font-medium">Carregando checkout...</p>
                         </div>
                     `;
-                    setTimeout(() => {
-                        document.getElementById('loadingOverlay').classList.add('hidden');
-                        openCheckout(parseInt(checkoutId));
-                    }, 500);
+                    
+                    // Esconder overlay e abrir checkout
+                    document.getElementById('loadingOverlay').classList.add('hidden');
+                    openCheckout(parseInt(checkoutId));
+                    
                 } else if (localStorage.getItem('adminLoggedIn') === 'true') {
+                    document.getElementById('loadingOverlay').classList.add('hidden');
                     showDashboard();
                 } else {
+                    document.getElementById('loadingOverlay').classList.add('hidden');
                     const memberEmail = localStorage.getItem('currentMember');
                     if (memberEmail && members.find(m => m.email === memberEmail)) showMemberArea();
                     else showMemberLogin();
                 }
             } catch (error) {
+                console.error('Erro na inicialização:', error);
                 document.getElementById('loadingOverlay').innerHTML = `
                     <div class="text-center">
                         <div class="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
